@@ -1,5 +1,5 @@
 import test from 'ava';
-import generateApi from './lib/fetcher';
+import generateApi from '../lib/fetcher';
 
 test('Fetcher', t => {
   window.crsfToken = 'token';

@@ -20,6 +20,9 @@
   ],
   "keywords": [],
   "ava": {
+    "files": [
+      "test/*.js"
+    ],
     "require": [
       "./test/helpers/setup-browser-env.js"
     ]
