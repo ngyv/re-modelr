@@ -13,7 +13,8 @@
   },
   "scripts": {
     "prepublishOnly": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
-    "test": "npm run prepublishOnly && xo --cwd=src && ava"
+    "cov": "nyc ava",
+    "test": "npm run prepublishOnly && xo --cwd=src && nyc ava"
   },
   "files": [
     "lib/index.js"
@@ -49,7 +50,15 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "browser-env": "^3.2.5",
-    "xo": "^0.18.2"
+    "xo": "^0.18.2",
+    "codecov": "^2.2.0",
+    "nyc": "^11.0.0"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   },
   "directories": {
     "lib": "lib",
@@ -61,7 +70,10 @@
   "xo": {
     "space": true,
     "rules": {
-      "object-curly-spacing": ["warn", "always"]
+      "object-curly-spacing": [
+        "warn",
+        "always"
+      ]
     }
   },
   "homepage": "https://github.com/ngyv/re-modelr#readme",
