@@ -13,7 +13,7 @@
   },
   "scripts": {
     "prepublishOnly": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
-    "test": "npm run prepublishOnly && xo && nyc ava"
+    "test": "npm run prepublishOnly && xo --cwd=src && ava"
   },
   "files": [
     "lib/index.js"
@@ -54,6 +54,12 @@
   },
   "bugs": {
     "url": "https://github.com/ngyv/re-modelr/issues"
+  },
+  "xo": {
+    "space": true,
+    "rules": {
+      "object-curly-spacing": ["warn", "always"]
+    }
   },
   "homepage": "https://github.com/ngyv/re-modelr#readme",
   "main": "lib/index.js"
