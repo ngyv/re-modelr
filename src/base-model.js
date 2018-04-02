@@ -1,20 +1,8 @@
 import camelcase from 'lodash.camelcase';
 import snakecase from 'lodash.snakecase';
-import { identify, compareType, isEqual, getTypeName, types } from '@ngyv/prop-utils';
+import { identify, comparePropertyToType, isEqual, getTypeName, getPropertyTypeName, types } from '@ngyv/prop-utils';
 import objectUtils from '@ngyv/object-utils';
 const { get, set, setObject, pluckSubset, difference } = objectUtils;
-
-const stubTypes = Object.freeze({
-  1: undefined,
-  2: null,
-  3: '',
-  4: true,
-  5: 'String',
-  6: 0,
-  7: new Array(),
-  8: new Date(),
-  9: { type: 'Simple' },
-});
 
 export default class BaseModel {
   _data = {}
@@ -37,9 +25,9 @@ export default class BaseModel {
 
   /**
   * [deserializedJson description]
-  * @_attributes {[function]} returns type or object { type, validate, ignoreTypes }
+  * @_attributes {[function]} returns type or object { type, validate }
   *    `type` must be provided in options object
-  *    `ignoreTypes` for type validations
+  *    `validate` can be boolean or options object containining { acceptedTypes: [] }
   */
   _attributes() {
     return {
@@ -78,25 +66,21 @@ export default class BaseModel {
     Object.keys(modelJson).forEach((attributeName) => {
       const expectedAttr = attributes[attributeName];
       let expectedType = expectedAttr;
-      let ignoreTypesAttr = {
+      let acceptedTypes = {
         nil: [types.undefined, types.null],
         strings: [types.emptyString, types.string, types.null],
       };
 
       // options passed
-      if (identify(expectedAttr) === types.object && expectedAttr.validate) {
+      if (identify(expectedAttr) === types.object) {
         if (!expectedAttr.type) {
           throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`);
         }
         expectedType = expectedAttr.type;
-        ignoreTypesAttr = expectedAttr.ignoreTypes ? { ignore: [expectedType, ...expectedAttr.ignoreTypes] } : ignoreTypesAttr;
+        acceptedTypes = comparePropertyToType(expectedAttr.validate, types.array) ? { ignore: [expectedType, ...expectedAttr.acceptedTypes] } : acceptedTypes;
 
-        const jsonType = identify(modelJson[attributeName]);
-        if (jsonType !== expectedType) {
-          let stubAttr = stubTypes[expectedType];
-          if(!compareType(modelJson[attributeName], stubAttr)) {
-            throw new TypeError(`Expected "${getTypeName(expectedType)}" but got "${getTypeName(jsonType)}" instead for "${attributeName}"`);
-          }
+        if (!comparePropertyToType(modelJson[attributeName], expectedType, acceptedTypes)) {
+          throw new TypeError(`Expected "${getTypeName(expectedType)}" but got "${getPropertyTypeName(modelJson[attributeName])}" instead for "${attributeName}"`);
         }
       }
     });
@@ -128,8 +112,12 @@ export default class BaseModel {
   //   }
   // },
 
+  softDelete() {
+    set(this, 'status.isDeleted', true);
+  }
+
   delete() {
-    return set(this, 'status.isDeleted', true);
+    return this._store.deleteEntry(this);
   }
 
   discardChanges() {
