@@ -1,0 +1,60 @@
+{
+  "name": "@ngyv/re-modelr",
+  "version": "0.1.0",
+  "description": "Object-relational mapping stores",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngyv/re-modelr.git"
+  },
+  "author": "Yvonne Ng <ngyv.codes@gmail.com> (github.com/ngyv)",
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "prepublishOnly": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
+    "test": "npm run prepublishOnly && xo && nyc ava"
+  },
+  "files": [
+    "lib/index.js"
+  ],
+  "keywords": [],
+  "ava": {
+    "require": [
+      "./test/helpers/setup-browser-env.js"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-class-properties"
+    ]
+  },
+  "dependencies": {
+    "@ngyv/object-utils": "^0.1.0",
+    "@ngyv/prop-utils": "^0.1.0",
+    "inflection": "^1.12.0",
+    "lodash.camelcase": "^4.3.0",
+    "lodash.snakecase": "^4.1.1"
+  },
+  "devDependencies": {
+    "ava": "^0.20.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "browser-env": "^3.2.5",
+    "xo": "^0.18.2"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "bugs": {
+    "url": "https://github.com/ngyv/re-modelr/issues"
+  },
+  "homepage": "https://github.com/ngyv/re-modelr#readme",
+  "main": "lib/index.js"
+}
