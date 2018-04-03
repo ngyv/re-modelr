@@ -33,12 +33,13 @@
       "es2015"
     ],
     "plugins": [
-      "transform-class-properties"
+      "transform-class-properties",
+      "transform-remove-strict-mode"
     ]
   },
   "dependencies": {
-    "@ngyv/object-utils": "^0.1.0",
-    "@ngyv/prop-utils": "^0.1.0",
+    "@ngyv/object-utils": "^1.0.0",
+    "@ngyv/prop-utils": "^1.1.0",
     "inflection": "^1.12.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.snakecase": "^4.1.1"
@@ -48,11 +49,12 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "babel-preset-es2015": "^6.24.1",
     "browser-env": "^3.2.5",
-    "xo": "^0.18.2",
     "codecov": "^2.2.0",
-    "nyc": "^11.0.0"
+    "nyc": "^11.0.0",
+    "xo": "^0.18.2"
   },
   "nyc": {
     "reporter": [
