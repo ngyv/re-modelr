@@ -38,7 +38,7 @@
     ]
   },
   "dependencies": {
-    "@ngyv/object-utils": "^1.0.0",
+    "@ngyv/object-utils": "^1.0.1",
     "@ngyv/prop-utils": "^1.1.0",
     "inflection": "^1.12.0",
     "lodash.camelcase": "^4.3.0",
