@@ -92,12 +92,12 @@ test('Base model | modifies user attributes and discarding changes successfully'
   t.is(user.isDirty(), false, 'Dirty state is now false');
 });
 
-test('Base model | deleting user marks status and changes to is dirty', t => {
+test('Base model | soft deleting user marks status and changes to is dirty', t => {
   let user = t.context.userModel;
   t.is(user.get('status.isDeleted'), false, 'Initial user `status.isDeleted` is false');
   t.is(user.isDirty(), false, 'Initial user is not dirty'); // :smirk:
 
-  user.delete();
+  user.softDelete();
   t.is(user.get('status.isDeleted'), true, 'User `status.isDeleted` is now true');
   t.is(user.isDirty(), true, 'Initial user is now dirty'); // :smiling_imp:
 });
