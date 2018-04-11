@@ -12,13 +12,18 @@ const defaultHeaders = {
 };
 
 const fetcher = function(method, url) {
-  return (data, headers = {}, credentials = 'same-origin') =>
-    window.fetch(url, {
+  return (data, headers = {}, credentials = 'same-origin') => {
+    if (data.id) {
+      url = `${url}/${data.id}`;
+      delete data.id;
+    }
+    return window.fetch(url, {
       method: method.toUpperCase(),
       body: JSON.stringify(data),
       credentials: credentials,
       headers: Object.assign({}, defaultHeaders, headers),
     }).then(res => res.ok ? res.json() : Promise.reject(res));
+  }
 };
 
 const generateApi = function(basePath, modelName) {
