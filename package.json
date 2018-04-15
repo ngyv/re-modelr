@@ -15,7 +15,7 @@
     "prepublishOnly": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "cov": "nyc ava",
     "lint": "npm run prepublishOnly && xo --cwd=src",
-    "test": "npm run prepublishOnly && nyc ava"
+    "test": "npm run prepublishOnly && NODE_ENV=test AVA_PLAYBACK=play nyc ava"
   },
   "files": [
     "lib/index.js"
