@@ -17,7 +17,7 @@ test.beforeEach(t => {
       return Object.assign({}, defaultAttributes, userAttributes);
     }
   }
-  const mockBasePath = 'https://9d064d8a-adaf-47e0-aa83-71cf283d65d1.mock.pstmn.io/api';
+  const mockBasePath = 'http://localhost:3000/api';
   const mockApiPath = `${mockBasePath}/users`;
   class UserStore extends DomainStore {
     constructor(){
