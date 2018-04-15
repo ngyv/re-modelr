@@ -1,7 +1,7 @@
 {
   "body": "",
-  "method": "put",
-  "path": "/api/users/1",
+  "method": "post",
+  "path": "/api/users",
   "queries": {
   },
   "rawHeaders": [
@@ -18,29 +18,29 @@
     "Content-Type",
     "text/html; charset=utf-8",
     "Date",
-    "Sun, 15 Apr 2018 10:15:33 GMT",
+    "Sun, 15 Apr 2018 16:21:36 GMT",
     "ETag",
-    "W/\"a6-HYq09wgEVU2T3kg9L1rpfg\"",
+    "W/\"e1-0ZuKHY+3Ep4prEzgTiz49A\"",
     "Server",
     "nginx",
     "Vary",
     "Accept-Encoding",
     "Content-Length",
-    "166",
+    "225",
     "Connection",
     "Close"
   ],
   "response": {
-    "age": "21",
-    "created_at": "2018-02-11T10:34:22.032Z",
+    "age": "24",
+    "created_at": "2018-02-11T10:34:22.037Z",
     "favourite_food": [
-      "nasi lemak",
-      "roti bom"
+      "bak kut teh",
+      "har mee"
     ],
-    "id": 1,
-    "name": "Siti Nurhaliza",
-    "updated_at": "2018-03-24T08:56:47.100Z"
+    "id": 4,
+    "name": "Elizabeth Tan",
+    "updated_at": "2018-04-02T09:12:20.221Z"
   },
-  "scope": "https://acdae6aa-24dc-4519-9c7e-5f5305112785.mock.pstmn.io:443",
+  "scope": "https://9d064d8a-adaf-47e0-aa83-71cf283d65d1.mock.pstmn.io:443",
   "status": 200
 }

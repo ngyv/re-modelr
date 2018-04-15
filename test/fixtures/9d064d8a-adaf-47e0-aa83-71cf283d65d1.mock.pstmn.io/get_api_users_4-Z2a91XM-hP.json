@@ -1,8 +1,9 @@
 {
   "body": "",
-  "method": "post",
-  "path": "/api/users",
+  "method": "get",
+  "path": "/api/users/4",
   "queries": {
+    "id": "4"
   },
   "rawHeaders": [
     "Access-Control-Allow-Credentials",
@@ -18,29 +19,19 @@
     "Content-Type",
     "text/html; charset=utf-8",
     "Date",
-    "Sun, 15 Apr 2018 10:04:47 GMT",
+    "Sun, 15 Apr 2018 16:21:36 GMT",
     "ETag",
-    "W/\"e1-0ZuKHY+3Ep4prEzgTiz49A\"",
+    "W/\"0-1B2M2Y8AsgTpgAmY7PhCfg\"",
     "Server",
     "nginx",
     "Vary",
     "Accept-Encoding",
     "Content-Length",
-    "225",
+    "0",
     "Connection",
     "Close"
   ],
-  "response": {
-    "age": "24",
-    "created_at": "2018-02-11T10:34:22.037Z",
-    "favourite_food": [
-      "bak kut teh",
-      "har mee"
-    ],
-    "id": 4,
-    "name": "Elizabeth Tan",
-    "updated_at": "2018-04-02T09:12:20.221Z"
-  },
-  "scope": "https://acdae6aa-24dc-4519-9c7e-5f5305112785.mock.pstmn.io:443",
-  "status": 200
+  "response": "",
+  "scope": "https://9d064d8a-adaf-47e0-aa83-71cf283d65d1.mock.pstmn.io:443",
+  "status": 404
 }

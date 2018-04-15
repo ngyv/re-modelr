@@ -1,6 +1,6 @@
 {
   "body": "",
-  "method": "delete",
+  "method": "put",
   "path": "/api/users/1",
   "queries": {
   },
@@ -18,7 +18,7 @@
     "Content-Type",
     "text/html; charset=utf-8",
     "Date",
-    "Sun, 15 Apr 2018 10:26:04 GMT",
+    "Sun, 15 Apr 2018 16:21:37 GMT",
     "ETag",
     "W/\"a6-HYq09wgEVU2T3kg9L1rpfg\"",
     "Server",
@@ -41,6 +41,6 @@
     "name": "Siti Nurhaliza",
     "updated_at": "2018-03-24T08:56:47.100Z"
   },
-  "scope": "https://acdae6aa-24dc-4519-9c7e-5f5305112785.mock.pstmn.io:443",
+  "scope": "https://9d064d8a-adaf-47e0-aa83-71cf283d65d1.mock.pstmn.io:443",
   "status": 200
 }

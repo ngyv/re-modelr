@@ -4,7 +4,7 @@ import reModelr from '../lib';
 const { BaseModel, DomainStore } = reModelr;
 
 test.beforeEach(t => {
-  const mockBasePath = 'https://acdae6aa-24dc-4519-9c7e-5f5305112785.mock.pstmn.io/api';
+  const mockBasePath = 'https://9d064d8a-adaf-47e0-aa83-71cf283d65d1.mock.pstmn.io/api';
 
   class Store extends DomainStore {
     constructor() {
