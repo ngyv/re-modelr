@@ -1,0 +1,46 @@
+{
+  "body": "",
+  "method": "put",
+  "path": "/api/users/1",
+  "queries": {
+  },
+  "rawHeaders": [
+    "Access-Control-Allow-Credentials",
+    "",
+    "Access-Control-Allow-Headers",
+    "",
+    "Access-Control-Allow-Methods",
+    "",
+    "Access-Control-Allow-Origin",
+    "*",
+    "Access-Control-Expose-Headers",
+    "",
+    "Content-Type",
+    "text/html; charset=utf-8",
+    "Date",
+    "Sun, 15 Apr 2018 10:15:33 GMT",
+    "ETag",
+    "W/\"a6-HYq09wgEVU2T3kg9L1rpfg\"",
+    "Server",
+    "nginx",
+    "Vary",
+    "Accept-Encoding",
+    "Content-Length",
+    "166",
+    "Connection",
+    "Close"
+  ],
+  "response": {
+    "age": "21",
+    "created_at": "2018-02-11T10:34:22.032Z",
+    "favourite_food": [
+      "nasi lemak",
+      "roti bom"
+    ],
+    "id": 1,
+    "name": "Siti Nurhaliza",
+    "updated_at": "2018-03-24T08:56:47.100Z"
+  },
+  "scope": "https://acdae6aa-24dc-4519-9c7e-5f5305112785.mock.pstmn.io:443",
+  "status": 200
+}

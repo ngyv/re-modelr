@@ -1,0 +1,37 @@
+{
+  "body": "",
+  "method": "get",
+  "path": "/api/users/4",
+  "queries": {
+    "id": "4"
+  },
+  "rawHeaders": [
+    "Access-Control-Allow-Credentials",
+    "",
+    "Access-Control-Allow-Headers",
+    "",
+    "Access-Control-Allow-Methods",
+    "",
+    "Access-Control-Allow-Origin",
+    "*",
+    "Access-Control-Expose-Headers",
+    "",
+    "Content-Type",
+    "text/html; charset=utf-8",
+    "Date",
+    "Sun, 15 Apr 2018 15:25:33 GMT",
+    "ETag",
+    "W/\"0-1B2M2Y8AsgTpgAmY7PhCfg\"",
+    "Server",
+    "nginx",
+    "Vary",
+    "Accept-Encoding",
+    "Content-Length",
+    "0",
+    "Connection",
+    "Close"
+  ],
+  "response": "",
+  "scope": "https://acdae6aa-24dc-4519-9c7e-5f5305112785.mock.pstmn.io:443",
+  "status": 404
+}
