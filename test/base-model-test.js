@@ -102,4 +102,32 @@ test('Base model | soft deleting user marks status and changes to is dirty', t =
   t.is(user.isDirty(), true, 'Initial user is now dirty'); // :smiling_imp:
 });
 
-test.todo('Base model | saves itself via store');
+test('Base model | saves itself via store', t => {
+  let { userStore } = t.context;
+  t.plan(3);
+
+  let newUser = new t.context.UserClass(userStore, {
+    id: 1,
+    name: 'Tan Hong Ming',
+    likes: 'Ummi Khazriena'
+  }, { isNew: true });
+
+  // Stub the methods. Domain store methods tested separately.
+  userStore.createEntry = (model) => t.is(model.status.isNew, true);
+  newUser.save();
+
+  newUser.set('likes', undefined);
+  userStore.updateEntry = (model) => t.is(model.likes, undefined);
+  newUser.save();
+
+  newUser.softDelete();
+  userStore.deleteEntry = (model) => t.is(model.status.isDeleted, true);
+  newUser.save();
+});
+
+test('Base model | deletes itself via store', t => {
+  let { userStore, userModel } = t.context;
+
+  userStore.deleteEntry = (model) => t.pass();
+  userModel.delete();
+});
