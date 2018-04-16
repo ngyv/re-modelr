@@ -10,7 +10,7 @@ export default class BaseModel {
   status = {}
 
   constructor(domainStore, modelJson, status = {}) {
-    if (identify(domainStore) !== types.class) {
+    if (!comparePropertyToType(domainStore, types.class, { similar: [types.function, types.object]})) {
       throw new TypeError('Invalid domain store');
     }
     this._store = domainStore;

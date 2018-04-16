@@ -1,7 +1,7 @@
 {
   "name": "@ngyv/re-modelr",
-  "version": "0.1.0",
-  "description": "Object-relational mapping stores",
+  "version": "0.8.2",
+  "description": "Simple-to-use javascript object-relational mapping store",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,9 +18,13 @@
     "test": "npm run prepublishOnly && NODE_ENV=test AVA_PLAYBACK=play nyc ava"
   },
   "files": [
-    "lib/index.js"
+    "lib/*.js"
   ],
-  "keywords": [],
+  "keywords": [
+    "javascript",
+    "object relational model",
+    "data store"
+  ],
   "ava": {
     "files": [
       "test/*.js"
@@ -46,6 +50,7 @@
   "dependencies": {
     "@ngyv/object-utils": "^1.0.1",
     "@ngyv/prop-utils": "^1.2.0",
+    "babel-runtime": "^6.26.0",
     "inflection": "^1.12.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.snakecase": "^4.1.1"
