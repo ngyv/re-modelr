@@ -102,15 +102,15 @@ export default class BaseModel {
     return difference(this._data, this);
   }
 
-  // save() {
-  //   if (this.status.isNew) {
-  //     return this._store.createEntry(this);
-  //   } else if (this.status.isDeleted){ // this check has to be before `isDirty`
-  //     return this._store.deleteEntry(this);
-  //   } else if (this.isDirty()) {
-  //     return this._store.updateEntry(this);
-  //   }
-  // },
+  save() {
+    if (this.status.isNew) {
+      return this._store.createEntry(this);
+    } else if (this.status.isDeleted){
+      return this._store.deleteEntry(this);
+    } else if (this.isDirty()) {
+      return this._store.updateEntry(this);
+    }
+  }
 
   softDelete() {
     set(this, 'status.isDeleted', true);
