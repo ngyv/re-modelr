@@ -21,7 +21,7 @@ test.beforeEach(t => {
   const mockApiPath = `${mockBasePath}/users`;
   class UserStore extends DomainStore {
     constructor(){
-      super(User, { basePath: mockBasePath})
+      super(User, { basePath: mockBasePath })
     }
   }
   const userStore = new UserStore();

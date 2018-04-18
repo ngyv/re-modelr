@@ -3,6 +3,7 @@
 
 > Simple-to-use javascript object-relational mapping store
 
+## Warning => currently ❌ for production 
 
 ## Install
 
@@ -13,8 +14,13 @@ $ npm i @ngyv/re-modelr --save
 
 ## How to use ?
 
-### BaseModel
-
+*  Default endpoints for DomainStore:
+*    GET       /modelName            List of entries      [ listEntries ]
+*    GET       /modelName/:id        Show entry details   [ showEntry   ]
+*    POST      /modelName            Create new entry     [ createEntry ]
+*    PUT       /modelName/:id        Update entry         [ updateEntry ]
+*    DELETE    /modelName/:id        Delete entry         [ deleteEntry ]
+*
 
 ```js
 import { BaseModel, DomainStore } from 're-modelr';
@@ -35,8 +41,7 @@ class User extends BaseModel {
   }
 }
 
-class UserStore extends DomainStore {}  // DomainStore not implemented yet
-const userStore = new UserStore();
+const userStore = new DomainStore(User, { basePath: '/ajax'} ); // basePath = '/api' by default
 
 // `id`, `createdAt`, and `updatedAt` are default attributes defined in the `BaseModel` class
 let singer = new User(userStore, {
@@ -58,9 +63,22 @@ singer.isDirty();
 singer.discardChanges();
 singer.get('name');
 //=> 'Yuna'
+
+singer.set('name', 'Siti');
+singer.save();
+
+userStore.listEntries();
+//=> { 1: UserModel, 2: UserModel, length: 2 }
+
+userStore.entries[1];
+//=> { id: 1, name: 'Yuna', status: { isSaving: false, isNew: false, isDeleted: false }, _store: DomainStore, _data:{}, ... }
+
+userStore.entriesArray();
+//=> [UserModel, UserModel]
+
 ```
 
-For more on the api, please look at the test file 😃
+For more on the api, please look at the test files 😃
 
 ## License
 
