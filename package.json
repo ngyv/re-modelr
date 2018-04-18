@@ -1,6 +1,6 @@
 {
   "name": "@ngyv/re-modelr",
-  "version": "0.8.2",
+  "version": "0.8.5",
   "description": "Simple-to-use javascript object-relational mapping store",
   "license": "MIT",
   "repository": {

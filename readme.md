@@ -3,7 +3,7 @@
 
 > Simple-to-use javascript object-relational mapping store
 
-## Warning => currently ❌ for production 
+## Warning => currently ❌ for production
 
 ## Install
 
@@ -14,13 +14,13 @@ $ npm i @ngyv/re-modelr --save
 
 ## How to use ?
 
-*  Default endpoints for DomainStore:
+Default endpoints for DomainStore:
 *    GET       /modelName            List of entries      [ listEntries ]
 *    GET       /modelName/:id        Show entry details   [ showEntry   ]
 *    POST      /modelName            Create new entry     [ createEntry ]
 *    PUT       /modelName/:id        Update entry         [ updateEntry ]
 *    DELETE    /modelName/:id        Delete entry         [ deleteEntry ]
-*
+
 
 ```js
 import { BaseModel, DomainStore } from 're-modelr';
