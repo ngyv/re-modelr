@@ -35,9 +35,9 @@ export default class DomainStore {
   entries = {}
   status = { isLoading: false, listedAll: false }
 
-  constructor(ModelClass, options = { basePath: '/api' }) {
+  constructor(ModelClass, options = { basePath: '/api', modelName: '' }) {
     this.ModelClass = ModelClass
-    this.modelName = this.ModelClass.name.toLowerCase()
+    this.modelName = options.modelName || this.ModelClass.name.toLowerCase()
     this._generateApi(options.basePath, this.modelName);
     // this._processModelRelationships()
   }
