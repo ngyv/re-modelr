@@ -26,7 +26,7 @@ test('Fetcher | creates wrapper function to fetch', async t => {
   const data = { id: 1, name: 'Ava' };
   const headers = { 'Accept': 'application/json' };
   response = await fetchFunction(data, headers);
-  t.is(response.body, JSON.stringify(data), 'data is passed to fetch');
+  t.is(response.url, '/api/users/1?name=Ava', 'data is passed to fetch as part of url');
   t.deepEqual(response.headers, {
      Accept: 'application/json',
      'Content-Type': 'application/json',
@@ -34,7 +34,6 @@ test('Fetcher | creates wrapper function to fetch', async t => {
    }, 'headers is combined');
   t.is(response.credentials, 'same-origin', 'default credentials is same-origin');
   t.is(response.method, 'GET', 'method is uppercased');
-  t.is(response.url, `${url}/1`, 'url is passed to fetch');
 });
 
 test('Fetcher | generate api with default crud functions', t => {

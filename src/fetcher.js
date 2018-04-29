@@ -11,18 +11,33 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
+const stringifyParams = function(data) {
+  return Object.keys(data).map(function(key) {
+    return `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
+  }).join('&');
+}
+
 const fetcher = function(method, url) {
   return (data, headers = {}, credentials = 'same-origin') => {
-    if (data.id) {
-      url = `${url}/${data.id}`;
-      delete data.id;
-    }
-    return window.fetch(url, {
+    let newUrl = ' ' + url.slice(1);
+    let options = {
       method: method.toUpperCase(),
-      body: JSON.stringify(data),
       credentials: credentials,
       headers: Object.assign({}, defaultHeaders, headers),
-    }).then(res => res.ok ? res.json() : Promise.reject(res));
+    };
+
+    if (data.id) {
+      newUrl = `${url}/${data.id}`;
+      delete data.id;
+    }
+
+    if (method !== 'get') {
+      options.body = JSON.stringify(data);
+    } else if (Object.keys(data).length) {
+      newUrl = `${newUrl}?${stringifyParams(data)}`;
+    }
+
+    return window.fetch(newUrl, options).then(res => res.ok ? res.json() : Promise.reject(res));
   }
 };
 
