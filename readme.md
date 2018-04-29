@@ -14,13 +14,19 @@ $ npm i @ngyv/re-modelr --save
 
 ## How to use ?
 
-Default endpoints for DomainStore:
-*    GET       /modelName            List of entries      [ listEntries ]
-*    GET       /modelName/:id        Show entry details   [ showEntry   ]
-*    POST      /modelName            Create new entry     [ createEntry ]
-*    PUT       /modelName/:id        Update entry         [ updateEntry ]
-*    DELETE    /modelName/:id        Delete entry         [ deleteEntry ]
+[With mobx](https://github.com/ngyv/re-modelr-mobx-demo)
 
+Default endpoints for DomainStore:
+
+```js
+/*
+ *    GET       /modelName            List of entries      [ listEntries ]
+ *    GET       /modelName/:id        Show entry details   [ showEntry   ]
+ *    POST      /modelName            Create new entry     [ createEntry ]
+ *    PUT       /modelName/:id        Update entry         [ updateEntry ]
+ *    DELETE    /modelName/:id        Delete entry         [ deleteEntry ]
+ */
+```
 
 ```js
 import { BaseModel, DomainStore } from 're-modelr';
