@@ -21,19 +21,26 @@ test.before(t => {
 
 test('Fetcher | creates wrapper function to fetch', async t => {
   const url = '/api/users';
-  const fetchFunction = fetcher('get', url);
-  let response = null;
+  const apiGet = fetcher('get', url);
+  let apiGetFunction = null;
   const data = { id: 1, name: 'Ava' };
+  const showUrl = '/api/users/1?name=Ava';
   const headers = { 'Accept': 'application/json' };
-  response = await fetchFunction(data, headers);
-  t.is(response.url, '/api/users/1?name=Ava', 'data is passed to fetch as part of url');
-  t.deepEqual(response.headers, {
+  apiGetFunction = await apiGet(data, headers);
+
+  t.plan(6);
+  t.is(apiGetFunction.url, showUrl, 'data is passed to fetch as part of url');
+  t.deepEqual(apiGetFunction.headers, {
      Accept: 'application/json',
      'Content-Type': 'application/json',
      'csrf-token': '', // TODO: fix window.crsfToken is not present when file ran
    }, 'headers is combined');
-  t.is(response.credentials, 'same-origin', 'default credentials is same-origin');
-  t.is(response.method, 'GET', 'method is uppercased');
+  t.is(apiGetFunction.credentials, 'same-origin', 'default credentials is same-origin');
+  t.is(apiGetFunction.method, 'GET', 'method is uppercased');
+  t.deepEqual(apiGetFunction.body, undefined, 'body is not passed');
+
+  const apiGetFunction2 = await apiGet();
+  t.is(apiGetFunction2.url, url, 'url is not compromised');
 });
 
 test('Fetcher | generate api with default crud functions', t => {

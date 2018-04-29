@@ -18,8 +18,8 @@ const stringifyParams = function(data) {
 }
 
 const fetcher = function(method, url) {
-  return (data, headers = {}, credentials = 'same-origin') => {
-    let newUrl = ' ' + url.slice(1);
+  return (data = {}, headers = {}, credentials = 'same-origin') => {
+    let newUrl = url.slice(0);
     let options = {
       method: method.toUpperCase(),
       credentials: credentials,
