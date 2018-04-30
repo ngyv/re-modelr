@@ -33,7 +33,9 @@ test.beforeEach(t => {
   t.context.userStore._api = {
     get: function(params) {
       if (params.id) {
-        return http.get(`${mockApiPath}/${params.id}`, { params });
+        const id = params.id;
+        delete params.id;
+        return http.get(`${mockApiPath}/${id}`, { params });
       }
       return http.get(mockApiPath, { params });
     },
@@ -196,27 +198,38 @@ test('Domain Store | find', async t => {
   }, 'Returns serialized model entry');
 });
 
-test('Domain Store | findOrShowEntry', t => {
+test('Domain Store | findOrShowEntry', async t => {
   const { userStore } = t.context;
-  const modelId = 4;
+  const modelId = 1;
+  t.plan(4);
 
   t.is(userStore.entries[modelId], undefined, 'Entry is not found in store cache');
-  userStore.findOrShowEntry(modelId).catch(error => t.is(error.statusCode, 404), 'Attemps to show entry from server');
+  const response = userStore.findOrShowEntry(1);
+  t.is(response.constructor.name, 'Promise', 'Makes a request');
+  await response;
+  t.not(userStore.entries[modelId], undefined, 'Entry is now found in store cache');
+  userStore._api.get = () => t.fail('Should not make another network request');
+  t.is(userStore.findOrShowEntry(1).constructor.name, 'Promise', 'Always returns as a promise');
 });
 
-test('Domain Store | allOrListEntries', t => {
+test('Domain Store | allOrListEntries', async t => {
   const { userStore } = t.context;
+  t.plan(5);
 
   t.deepEqual(userStore.entries, {}, 'No entries found in store cache');
   const params = { filter: 'random' };
   const callbacks = { successCallback: () => 'successCallback' , errorCallback: () => 'errorCallback', finallyCallback: () => 'finallyCallback' };
+
   userStore.listEntries = (...args) => {
     t.pass('Tries to list entries from server');
     t.deepEqual(args[0], params, 'Params are being passed on to "listEntries"');
     t.deepEqual(args[1], callbacks, 'Callback functions are being passed on to "listEntries"');
   };
   const toJson = false;
-  userStore.allOrListEntries(toJson, params, callbacks);
+  await userStore.allOrListEntries(toJson, params, callbacks);
+  userStore.entries = { 1: { id: 1 }, length: 1 }; // stub
+  userStore.listEntries = () => t.fail('Should not make another network request');
+  t.is(userStore.allOrListEntries().constructor.name, 'Promise', 'Always returns as a promise');
 });
 
 test('Domain Store | createRecord', t => {

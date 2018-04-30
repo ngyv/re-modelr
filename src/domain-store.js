@@ -196,15 +196,15 @@ export default class DomainStore {
     if (!cache) {
       return this.showEntry(id, params, { successCallback, errorCallback, finallyCallback });
     }
-    return cache;
+    return Promise.resolve(cache);
   }
 
   allOrListEntries(toJson, params, { successCallback, errorCallback, finallyCallback } = {}) {
-    const cache = this.all(true);
+    const cache = this.all(toJson);
     if (!cache.length) {
-      return this.listEntries(params, { successCallback, errorCallback, finallyCallback } );
+      return this.listEntries(params, { successCallback, errorCallback, finallyCallback });
     }
-    return cache;
+    return Promise.resolve(cache);
   }
   //--
 
