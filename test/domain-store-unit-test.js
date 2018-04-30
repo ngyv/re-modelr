@@ -111,7 +111,7 @@ test('Domain Store | _fetchOne', t => {
 		store._fetchOne();
 	}, TypeError);
 
-	t.is(error.message, 'Expected "id" in params', 'Throws error if id in params is not number or string');
+	t.is(error.message, 'Expected "id" as "number" or "string" in params', 'Throws error if id in params is not number or string');
 });
 
 test.todo('Domain Store | _fetchOneSuccess');

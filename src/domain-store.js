@@ -105,7 +105,7 @@ export default class DomainStore {
 
   _fetchOne(params = {}) {
     if (!comparePropertyToType(params.id, types.number, { similar: [types.string] })) {
-      throw new TypeError('Expected "id" in params');
+      throw new TypeError('Expected "id" as "number" or "string" in params');
     }
     return this._api.get(params);
   }
@@ -229,8 +229,8 @@ export default class DomainStore {
   }
 
   async showEntry(id, params, { successCallback, errorCallback, finallyCallback } = {}) {
-    if (identify(id) !== types.number) {
-      throw new TypeError('Expected number "id"');
+    if (!comparePropertyToType(id, types.number, { similar: [types.string] })) {
+      throw new TypeError('Expected "id" as "number" or "string"');
     }
 
     successCallback = successCallback || this._fetchOneSuccess.bind(this);
