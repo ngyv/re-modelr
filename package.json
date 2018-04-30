@@ -61,6 +61,7 @@
     "ava-playback": "0.0.14",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
@@ -69,6 +70,9 @@
     "babel-preset-es2017": "^6.24.1",
     "browser-env": "^3.2.5",
     "codecov": "^2.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0",
     "nyc": "^11.0.0",
     "xo": "^0.18.2"
   },
