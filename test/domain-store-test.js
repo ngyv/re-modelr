@@ -151,9 +151,9 @@ test('Domain store | deleteEntry', async t => {
 test('Domain Store | entriesArray', async t => {
   const { userStore } = t.context;
 
-  t.deepEqual(userStore.entriesArray(), [], 'Entries array is empty');
+  t.deepEqual(userStore.entriesArray, [], 'Entries array is empty');
   await userStore.listEntries();
-  t.deepEqual(userStore.entriesArray(), [userStore.entries[1], userStore.entries[2], userStore.entries[3]], 'Entries array contains model entries');
+  t.deepEqual(userStore.entriesArray, [userStore.entries[1], userStore.entries[2], userStore.entries[3]], 'Entries array contains model entries');
 });
 
 test('Domain Store | all', async t => {
