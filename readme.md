@@ -79,7 +79,7 @@ userStore.listEntries();
 userStore.entries[1];
 //=> { id: 1, name: 'Yuna', status: { isSaving: false, isNew: false, isDeleted: false }, _store: DomainStore, _data:{}, ... }
 
-userStore.entriesArray();
+userStore.entriesArray;
 //=> [UserModel, UserModel]
 
 ```

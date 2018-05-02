@@ -169,14 +169,14 @@ export default class DomainStore {
   //--
 
   //-- always hits cache
-  entriesArray() {
+  get entriesArray() {
     let allKeys = Object.assign({}, this.entries)
     delete allKeys.length
     return Object.keys(allKeys).map((key) => this.entries[key])
   }
 
   all(toJson) {
-    return toJson ? this.entriesArray().map((entry) => entry._serialize()) : this.entries
+    return toJson ? this.entriesArray.map((entry) => entry._serialize()) : this.entries
   }
 
   find(id, toJson) {
