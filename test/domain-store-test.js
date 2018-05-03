@@ -159,8 +159,8 @@ test('Domain Store | entriesArray', async t => {
 test('Domain Store | all', async t => {
   const { userStore } = t.context
 
-  t.deepEqual(userStore.entries, {}, 'Store is empty')
-  t.deepEqual(userStore.all(), {}, 'Method always hits cached entries')
+  t.deepEqual(userStore.entries, { length: 0 }, 'Store is empty')
+  t.deepEqual(userStore.all(), { length: 0 }, 'Method always hits cached entries')
 
   await userStore.listEntries()
   t.deepEqual(userStore.all(), userStore.entries, 'Returns model entries')
@@ -182,7 +182,7 @@ test('Domain Store | find', async t => {
   t.is(error.message, 'Expected "id" as "number" or "string"')
 
 
-  t.deepEqual(userStore.entries, {}, 'Store is empty')
+  t.deepEqual(userStore.entries, { length: 0 }, 'Store is empty')
   t.deepEqual(userStore.find(modelId), undefined, 'Method always hits cached entry')
 
   await userStore.showEntry(1)
@@ -216,7 +216,7 @@ test('Domain Store | allOrListEntries', async t => {
   const { userStore } = t.context
   t.plan(5)
 
-  t.deepEqual(userStore.entries, {}, 'No entries found in store cache')
+  t.deepEqual(userStore.entries, { length: 0 }, 'No entries found in store cache')
   const params = { filter: 'random' }
   const callbacks = { successCallback: () => 'successCallback' , errorCallback: () => 'errorCallback', finallyCallback: () => 'finallyCallback' }
 

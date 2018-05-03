@@ -1,6 +1,6 @@
 import inflection from 'inflection'
 
-const getCrsfToken = function() {
+const getCrsfToken = () => {
   let dom = document.getElementsByName('csrf-token')
   return dom.length ? dom[0].getAttribute('content') : ''
 }
@@ -11,13 +11,13 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 }
 
-const stringifyParams = function(data) {
-  return Object.keys(data).map(function(key) {
+const stringifyParams = (data) => {
+  return Object.keys(data).map((key) => {
     return `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
   }).join('&')
 }
 
-const fetcher = function(method, url) {
+const fetcher = (method, url) => {
   return (data = {}, headers = {}, credentials = 'same-origin') => {
     let newUrl = url.slice(0)
     let options = {
@@ -41,7 +41,7 @@ const fetcher = function(method, url) {
   }
 }
 
-const generateApi = function(basePath, modelName) {
+const generateApi = (basePath, modelName) => {
   return ['get', 'post', 'put', 'delete'].reduce((api, method) => {
     api[method] = fetcher(method, `${basePath}/${inflection.pluralize(modelName)}`)
     return api
