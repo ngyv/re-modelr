@@ -30,7 +30,7 @@ import snakecase from 'lodash.snakecase'
 
 export default class DomainStore {
   _api = {}
-  entries = {}
+  entries = { length: 0 }
   status = { isLoading: false, listedAll: false }
 
   constructor(ModelClass, options = { basePath: '/api', modelName: '' }) {
