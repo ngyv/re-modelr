@@ -60,16 +60,19 @@ export default class DomainStore {
   }
 
   _pushEntry(modelJson) {
-    this.entries[modelJson.id] = this._createRecord(modelJson)
-    delete this.entries.length
-    this.entries.length = Object.keys(this.entries).length
+    const entryChanges = { [`${modelJson.id}`]: this._createRecord(modelJson), length: parseInt(this.entries.length) + 1 }
+    this.entries = Object.assign({}, this.entries, entryChanges)
     return this.entries[modelJson.id]
   }
 
   _deleteEntry(id) {
-    delete this.entries[id]
-    delete this.entries.length
-    this.entries.length = Object.keys(this.entries).length
+    this.entries = this.entriesArray.reduce((newEntries, entry) => {
+      if (entry.id !== id) {
+        newEntries[entry.id] = entry
+        ++newEntries.length
+      }
+      return newEntries
+    }, { length: 0 })
   }
 
   _genericError(error) {
