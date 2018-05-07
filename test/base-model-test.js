@@ -1,10 +1,8 @@
 import test from 'ava'
 import { types } from '@ngyv/prop-utils'
-import reModelr from '../lib'
+import { BaseModel } from '../lib'
 
 test.beforeEach(t => {
-  const { BaseModel } = reModelr
-
   class User extends BaseModel {
     _attributes() {
       const defaultAttributes = super._attributes()

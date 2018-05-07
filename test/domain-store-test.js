@@ -1,11 +1,9 @@
 import test from 'ava'
 import http from 'ava-http'
 import { types } from '@ngyv/prop-utils'
-import reModelr from '../lib'
+import { BaseModel, DomainStore } from '../lib'
 
 test.beforeEach(t => {
-  const { BaseModel, DomainStore } = reModelr
-
   class User extends BaseModel {
     _attributes() {
       const defaultAttributes = super._attributes()
