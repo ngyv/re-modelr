@@ -1,18 +1,14 @@
 import test from 'ava'
-import { types } from '@ngyv/prop-utils'
-import { BaseModel } from '../lib'
+import { types as propTypes } from '@ngyv/prop-utils'
+import { type, BaseModel } from '../lib'
 
 test.beforeEach(t => {
   class User extends BaseModel {
     _attributes() {
       const defaultAttributes = super._attributes()
       const userAttributes = {
-        name: {
-          type: types.string,
-          validate: true,
-          ignoreTypes: [types.undefined, types.null, types.emptyString],
-        },
-        favouriteFood: types.array,
+        name: type('string', { required: true, acceptedTypes: [propTypes.undefined, propTypes.null, propTypes.emptyString] }),
+        favouriteFood: type('array'),
       }
       return Object.assign({}, defaultAttributes, userAttributes)
     }
@@ -47,7 +43,7 @@ test('Base model | validates name', t => {
       name: 10
     })
   }, TypeError)
-  t.is(error.message, 'Expected "string" but got "number" instead for "name"')
+  t.is(error.message, 'Expected "string" but got property "10" of type "number" instead')
 })
 
 test('Base model | creates user', t => {
