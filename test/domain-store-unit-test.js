@@ -80,7 +80,7 @@ test('Domain Store | _genericError', t => {
   const { store } = t.context
 
   let message = ''
-  console.error = (error) => { message = `Error log: "${error}"` }
+  console.error = (error) => { message = `Error log: "${error}"` }  // eslint-disable-line no-console
   store._genericError('Howdy doo')
   t.is(message, 'Error log: "Howdy doo"')
 })

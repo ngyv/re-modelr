@@ -1,16 +1,15 @@
 import test from 'ava'
 import http from 'ava-http'
-import { types } from '@ngyv/prop-utils'
-import { BaseModel, DomainStore } from '../lib'
+import { type, BaseModel, DomainStore } from '../lib'
 
 test.beforeEach(t => {
   class User extends BaseModel {
     _attributes() {
       const defaultAttributes = super._attributes()
       const userAttributes = {
-        name: types.string,
-        age: types.number,
-        favouriteFood: types.array,
+        name: type('string'),
+        age: type('number'),
+        favouriteFood: type('array'),
       }
       return Object.assign({}, defaultAttributes, userAttributes)
     }
@@ -54,7 +53,7 @@ test('Domain Store | listEntries', async t => {
   t.is(entries.length, 3, 'Fetched 3 users')
   t.is(entries[1].constructor.name, 'User', 'Uses model class to instantiate response')
   t.deepEqual(entries[1]._data, {
-    age: '31',
+    age: 31,
     createdAt: '2018-02-11T10:34:22.032Z',
     favouriteFood: ['nasi lemak', 'roti bom'],
     id: 1,
@@ -66,7 +65,7 @@ test('Domain Store | listEntries', async t => {
 test('Domain Store | showEntry', async t => {
   const entry = await t.context.userStore.showEntry(1)
   t.deepEqual(entry._data, {
-    age: '31',
+    age: 31,
     createdAt: '2018-02-11T10:34:22.032Z',
     favouriteFood: ['nasi lemak', 'roti bom'],
     id: 1,
@@ -86,7 +85,7 @@ test('Domain store | createEntry', async t => {
   const user = await userStore.createEntry(modelJson)
 
   t.deepEqual(user._data, {
-    age: modelJson.age.toString(),
+    age: modelJson.age,
     createdAt: '2018-02-11T10:34:22.037Z',
     favouriteFood: modelJson.favouriteFood,
     id: 4,
@@ -100,11 +99,11 @@ test('Domain store | updateEntry', async t => {
   await userStore.listEntries()
 
   let modelEntry =  userStore.entries[1]
-  t.is(modelEntry.get('age'), '31', 'Initial age is 31')
+  t.is(modelEntry.get('age'), 31, 'Initial age is 31')
   modelEntry.set('age', 21)
 
   const entry = await userStore.updateEntry(modelEntry)
-  t.is(entry._data.age, '21', 'Serializes model with updated age')
+  t.is(entry._data.age, 21, 'Serializes model with updated age')
 })
 
 test('Domain store | updateEntries', async t => {
@@ -127,7 +126,7 @@ test('Domain store | updateEntries', async t => {
 
   await userStore.updateEntries(modelArray)
 
-  t.deepEqual(userStore.entries[1]._data, Object.assign({}, entryOneData, { age: newAge.toString() }))
+  t.deepEqual(userStore.entries[1]._data, Object.assign({}, entryOneData, { age: newAge }))
   t.deepEqual(userStore.entries[2]._data, Object.assign({}, entryTwoData, { name: newName }))
 })
 
@@ -187,7 +186,7 @@ test('Domain Store | find', async t => {
   t.deepEqual(userStore.find(modelId), userStore.entries[modelId], 'Returns model entry')
   const toJson = true
   t.deepEqual(userStore.find(modelId, toJson), {
-    age: '31',
+    age: 31,
     created_at: '2018-02-11T10:34:22.032Z',
     favourite_food: ['nasi lemak', 'roti bom'],
     id: 1,

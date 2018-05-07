@@ -31,19 +31,14 @@ Default endpoints for DomainStore:
 ```
 
 ```js
-import { BaseModel, DomainStore } from 're-modelr';
-
-import { types } from '@ngyv/prop-utils';
+import { type, BaseModel, DomainStore } from '@ngyv/re-modelr';
 
 class User extends BaseModel {
   _attributes() {
     const defaultAttributes = super._attributes();
     const userAttributes = {
-      name: {
-        type: types.string,
-        validate: [types.undefined, types.null, types.emptyString] // optional. Validation will run because `name` is an object
-      },
-      favouriteFood: types.array,
+      name: type('string', { required: true, acceptedTypes: [propTypes.undefined, propTypes.null, propTypes.emptyString] }),
+      favouriteFood: type('array'),
     };
     return Object.assign({}, defaultAttributes, userAttributes);
   }

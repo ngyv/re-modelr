@@ -1,5 +1,10 @@
 import snakecase from 'lodash.snakecase'
-import { identify, comparePropertyToType, getTypeName, getPropertyTypeName, types } from '@ngyv/prop-utils'
+import { validate } from './model-descriptors'
+import {
+  identify,
+  comparePropertyToType,
+  types as propTypes
+} from '@ngyv/prop-utils'
 import objectUtils from '@ngyv/object-utils'
 const { get, set, setObject, pluckSubset, difference } = objectUtils
 
@@ -9,7 +14,7 @@ export default class BaseModel {
   status = {}
 
   constructor(domainStore, modelJson, status = {}) {
-    if (!comparePropertyToType(domainStore, types.class, { similar: [types.function, types.object]})) {
+    if (!comparePropertyToType(domainStore, propTypes.class, { similar: [propTypes.function, propTypes.object]})) {
       throw new TypeError('Invalid domain store')
     }
     this._store = domainStore
@@ -30,9 +35,9 @@ export default class BaseModel {
   */
   _attributes() {
     return {
-      id: types.number,
-      createdAt: types.date,
-      updatedAt: types.date,
+      id: propTypes.number,
+      createdAt: propTypes.date,
+      updatedAt: propTypes.date,
     }
   }
 
@@ -53,7 +58,7 @@ export default class BaseModel {
   _validateAttributes(modelJson) {
     const type = identify(modelJson)
 
-    if (type !== types.object) {
+    if (type !== propTypes.object) {
       throw new TypeError('Non-object passed')
     }
 
@@ -63,24 +68,21 @@ export default class BaseModel {
 
     const attributes = this._attributes()
     Object.keys(modelJson).forEach((attributeName) => {
-      const expectedAttr = attributes[attributeName]
-      let expectedType = expectedAttr
+      const expected = attributes[attributeName]
       let acceptedTypes = {
-        nil: [types.undefined, types.null],
-        strings: [types.emptyString, types.string, types.null],
+        nil: [propTypes.undefined, propTypes.null],
+        strings: [propTypes.emptyString, propTypes.string, propTypes.null],
       }
 
-      // options passed
-      if (identify(expectedAttr) === types.object) {
-        if (!expectedAttr.type) {
+      // model descriptors
+      if (identify(expected) === propTypes.object) {
+        if (!expected.type) {
           throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`)
         }
-        expectedType = expectedAttr.type
-        acceptedTypes = comparePropertyToType(expectedAttr.validate, types.array) ? { ignore: [expectedType, ...expectedAttr.acceptedTypes] } : acceptedTypes
 
-        if (!comparePropertyToType(modelJson[attributeName], expectedType, acceptedTypes)) {
-          throw new TypeError(`Expected "${getTypeName(expectedType)}" but got "${getPropertyTypeName(modelJson[attributeName])}" instead for "${attributeName}"`)
-        }
+        acceptedTypes = comparePropertyToType(expected.validate, propTypes.array) ? { ignore: [expected.type, ...expected.acceptedTypes] } : acceptedTypes
+
+        return validate(modelJson[attributeName], Object.assign({}, expected, { acceptedTypes }))
       }
     })
   }
