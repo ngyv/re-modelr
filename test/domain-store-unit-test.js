@@ -1,7 +1,6 @@
 import test from 'ava'
 import { types, identify } from '@ngyv/prop-utils'
-import reModelr from '../lib'
-const { BaseModel, DomainStore } = reModelr
+import { BaseModel, DomainStore } from '../lib'
 
 test.beforeEach(t => {
   const mockBasePath = 'http://localhost:3000/api'
