@@ -63,6 +63,11 @@ test('Domain Store | listEntries', async t => {
 })
 
 test('Domain Store | showEntry', async t => {
+  t.plan(3)
+
+  const error = await t.throws(t.context.userStore.showEntry(), TypeError)
+  t.is(error.message, 'Expected "id" as "number" or "string"')
+
   const entry = await t.context.userStore.showEntry(1)
   t.deepEqual(entry._data, {
     age: 31,
