@@ -1,7 +1,7 @@
+import camelcase from 'lodash.camelcase'
 import snakecase from 'lodash.snakecase'
-import { validate } from './model-descriptors'
+import { type, _validateAttributes } from './model-descriptors'
 import {
-  identify,
   comparePropertyToType,
   types as propTypes
 } from '@ngyv/prop-utils'
@@ -19,7 +19,8 @@ export default class BaseModel {
     }
     this._store = domainStore
 
-    this._validateAttributes(modelJson)
+    this._validateAttributes(modelJson) // does not block serialization now
+
     this._deserialize(modelJson)
     this._cache(modelJson)
     // observe this
@@ -35,9 +36,9 @@ export default class BaseModel {
   */
   _attributes() {
     return {
-      id: propTypes.number,
-      createdAt: propTypes.date,
-      updatedAt: propTypes.date,
+      id: type('number', { required: true }),
+      createdAt: type('string'), //TODO: remove hack by adding parser
+      updatedAt: type('string'),
     }
   }
 
@@ -56,35 +57,11 @@ export default class BaseModel {
   }
 
   _validateAttributes(modelJson) {
-    const type = identify(modelJson)
-
-    if (type !== propTypes.object) {
-      throw new TypeError('Non-object passed')
-    }
-
-    if (Object.keys(modelJson).length === 0) {
-      throw new TypeError('Empty json object')
-    }
-
-    const attributes = this._attributes()
-    Object.keys(modelJson).forEach((attributeName) => {
-      const expected = attributes[attributeName]
-      let acceptedTypes = {
-        nil: [propTypes.undefined, propTypes.null],
-        strings: [propTypes.emptyString, propTypes.string, propTypes.null],
-      }
-
-      // model descriptors
-      if (identify(expected) === propTypes.object) {
-        if (!expected.type) {
-          throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`)
-        }
-
-        acceptedTypes = comparePropertyToType(expected.validate, propTypes.array) ? { ignore: [expected.type, ...expected.acceptedTypes] } : acceptedTypes
-
-        return validate(modelJson[attributeName], Object.assign({}, expected, { acceptedTypes }))
-      }
-    })
+    const camelcaseJson = Object.keys(modelJson || {}).reduce((camelcaseJson, key) => {
+      camelcaseJson[camelcase(key)] = modelJson[key]
+      return camelcaseJson
+    }, {})
+    return _validateAttributes(camelcaseJson, this._attributes())
   }
 
   get(key) {
