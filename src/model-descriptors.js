@@ -13,6 +13,10 @@ const TYPE_OPTIONS = Object.freeze([
 
 const TYPE_NAMES = Object.keys(propTypes)
 
+const ACCEPTED_TYPES = Object.freeze({
+  nil: [propTypes.undefined, propTypes.null],
+  strings: [propTypes.emptyString, propTypes.string, propTypes.null],
+})
 /**
  * Takes in model descriptors and returns a flat object
  * @param  {string} typeName  String representation of prop types
@@ -54,7 +58,47 @@ const validate = (attribute, type = {}) => {
   return true
 }
 
+/**
+ * @private _validateAttributes
+ * @param  {object} modelJson  Will be validated against the attributes
+ * @param  {object} attributes  Each property contains the type to be validated
+ * @return {boolean}
+ */
+const _validateAttributes = (modelJson, attributes) => {
+  if (!comparePropertyToType(modelJson, propTypes.object) || !comparePropertyToType(attributes, propTypes.object)) {
+    throw new TypeError('Non-object passed')
+  }
+
+  let warn = false, validated = true, missingDescriptors = []
+  Object.keys(modelJson).forEach((attributeName) => {
+    const expected = attributes[attributeName]
+
+    // model descriptors
+    if (comparePropertyToType(expected, propTypes.object)) {
+      if (!expected.type) {
+        throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`)
+      }
+
+      const acceptedTypes = comparePropertyToType(expected.acceptedTypes, propTypes.array) ? { ignore: [expected.type, ...expected.acceptedTypes] } : ACCEPTED_TYPES
+
+      if(!validate(modelJson[attributeName], Object.assign({}, expected, { acceptedTypes }))) {
+        validated = false
+      }
+    } else {
+      missingDescriptors.push(attributeName)
+      warn = true
+    }
+  })
+
+  if (warn) {
+    console.warn(`Please use "type" function to describe model attributes (${missingDescriptors.toString()})`)  // eslint-disable-line no-console
+  }
+
+  return validated
+}
+
 export {
   type,
-  validate
+  validate,
+  _validateAttributes,
 }

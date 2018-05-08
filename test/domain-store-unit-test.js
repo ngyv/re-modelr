@@ -1,13 +1,21 @@
 import test from 'ava'
-import { types, identify } from '@ngyv/prop-utils'
-import { BaseModel, DomainStore } from '../lib'
+import { types as propTypes, identify } from '@ngyv/prop-utils'
+import { type, BaseModel, DomainStore } from '../lib'
 
 test.beforeEach(t => {
   const mockBasePath = 'http://localhost:3000/api'
-
+  class Model extends BaseModel {
+    _attributes() {
+      const defaultAttributes = super._attributes()
+      const userAttributes = {
+        color: type('string'),
+      }
+      return Object.assign({}, defaultAttributes, userAttributes)
+    }
+  }
   class Store extends DomainStore {
     constructor() {
-      super(BaseModel, { basePath: mockBasePath })
+      super(Model, { basePath: mockBasePath })
     }
   }
   t.context.Store = Store
@@ -37,7 +45,7 @@ test('Domain Store | _generateApi', t => {
   t.deepEqual(Object.keys(store._api), ['get', 'post', 'put', 'delete'], '_api is object with fetch method names')
   let allFunctions = true
   Object.keys(store._api).forEach(key => {
-    if(identify(store._api[key]) !== types.function) {
+    if(identify(store._api[key]) !== propTypes.function) {
       allFunctions = false
     }
   })
@@ -61,7 +69,7 @@ test('Domain Store | _normalizeModels', t => {
   const entries = store._normalizeModels(jsonArray)
   t.deepEqual(Object.keys(entries), ['1', '2', 'length'], 'Normalizes models as hash of model ids with length as keys')
   t.is(entries.length, jsonArray.length, 'Entries length is same as json array')
-  t.is(entries[2].constructor.name, 'BaseModel', 'Entries contains BaseModel')
+  t.is(entries[2].constructor.name, 'Model', 'Entries contains BaseModel')
 })
 
 test('Domain Store | _pushEntry', t => assertCallApiMethodVerifyPushedEntry(t, { classProperty: '_pushEntry', modelJson: { id: 1 } }))
