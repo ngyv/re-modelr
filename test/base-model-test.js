@@ -111,6 +111,9 @@ test('Base model | saves itself via store', t => {
   userStore.createEntry = (model) => t.is(model.status.isNew, true)
   newUser.save()
 
+  // since we're not actually saving ... { isNew: true } never resets
+  newUser.set('status.isNew', false)
+
   newUser.set('likes', undefined)
   userStore.updateEntry = (model) => t.is(model.likes, undefined)
   newUser.save()
