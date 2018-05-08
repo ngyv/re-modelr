@@ -9,6 +9,7 @@ test.beforeEach(t => {
       const userAttributes = {
         name: type('string', { required: true, acceptedTypes: [propTypes.undefined, propTypes.null, propTypes.emptyString] }),
         favouriteFood: type('array'),
+        likes: type('string'),
       }
       return Object.assign({}, defaultAttributes, userAttributes)
     }
@@ -19,8 +20,8 @@ test.beforeEach(t => {
   let userModel = new User(userStore, {
     id: 1,
     name: 'Avo',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: 'Tue May 08 2018 18:29:39 GMT+0800 (+08)', // TODO: remove hack after parser
+    updatedAt: 'Tue May 08 2018 18:29:39 GMT+0800 (+08)',
   })
 
   t.context.UserClass = User
@@ -50,7 +51,7 @@ test('Base model | creates user', t => {
   let anotherUser = new t.context.UserClass(t.context.userStore, {
     id: 2,
     name: 'Cado',
-    favourite_food: ['poke', 'pho'],
+    favouriteFood: ['poke', 'pho'],
   },
   {
     isNew: true,
