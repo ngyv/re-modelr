@@ -43,6 +43,31 @@ test('Fetcher | creates wrapper function to fetch', async t => {
   t.is(apiGetFunction2.url, url, 'url is not compromised')
 })
 
+test('Fetcher | passed params to request body', async t => {
+  t.plan(5)
+
+  const url = '/api/users'
+  const apiPost = fetcher('post', url)
+  const apiPut = fetcher('put', url)
+
+  let apiFunction = null
+  const data = { id: 1, name: 'Ava' }
+  const headers = { 'Accept': 'application/json' }
+  apiFunction = await apiPost(data, headers)
+
+  t.deepEqual(apiFunction.headers, {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'csrf-token': '', // TODO: fix window.crsfToken is not present when file ran
+  }, 'headers is combined')
+  t.deepEqual(apiFunction.body, '{"name":"Ava"}', 'Data is passed to body for POST requests')
+  t.is(apiFunction.method, 'POST', 'method is properly passed')
+
+  apiFunction = await apiPut(data, headers)
+  t.deepEqual(apiFunction.body, '{"name":"Ava"}', 'Data is passed to body for PUT requests')
+  t.is(apiFunction.method, 'PUT', 'method is properly passed')
+})
+
 test('Fetcher | generate api with default crud functions', t => {
   const api = generateApi('/api', 'user')
   t.plan(4)
