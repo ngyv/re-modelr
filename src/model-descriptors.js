@@ -2,7 +2,8 @@ import {
   types as propTypes,
   comparePropertyToType,
   getTypeName,
-  getPropertyTypeName
+  getPropertyTypeName,
+  parseValueToType,
 } from '@ngyv/prop-utils'
 
 const TYPE_OPTIONS = Object.freeze([
@@ -95,9 +96,10 @@ const _validateAttributes = (modelJson, attributes) => {
       }
 
       const jsonAttribute = _defaultAttribute(modelJson[attributeName], expected.default)
+      const parsedJsonAttribute = parseValueToType(jsonAttribute, expected.type)
       const acceptedTypes = comparePropertyToType(expected.acceptedTypes, propTypes.array) ? { ignore: [expected.type, ...expected.acceptedTypes] } : ACCEPTED_TYPES
 
-      if(!validate(jsonAttribute, Object.assign({}, expected, { acceptedTypes }))) {
+      if(!validate(parsedJsonAttribute, Object.assign({}, expected, { acceptedTypes }))) {
         validated = false
       }
     } else {

@@ -20,8 +20,8 @@ test.beforeEach(t => {
   let userModel = new User(userStore, {
     id: 1,
     name: 'Avo',
-    createdAt: 'Tue May 08 2018 18:29:39 GMT+0800 (+08)', // TODO: remove hack after parser
-    updatedAt: 'Tue May 08 2018 18:29:39 GMT+0800 (+08)',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   })
 
   t.context.UserClass = User
