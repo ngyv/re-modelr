@@ -59,6 +59,21 @@ const validate = (attribute, type = {}) => {
 }
 
 /**
+ * _defaultAttribute  will return the parsed attribute as default value if attribute is one of the overrideTypes
+ * @param  {*} attribute
+ * @param  {*} defaultValue
+ * @param  {Array}  i.e. [overrideTypes=[propTypes.undefined, propTypes.null]]
+ * @return {*}
+ */
+const _defaultAttribute = (attribute, defaultValue, overrideTypes) => {
+  if (comparePropertyToType(defaultValue, propTypes.undefined)) {
+    return attribute
+  }
+  const override = overrideTypes ? { override: [propTypes.undefined, propTypes.null] } : undefined
+  return (comparePropertyToType(attribute, propTypes.undefined, override)) ? defaultValue : attribute
+}
+
+/**
  * @private _validateAttributes
  * @param  {object} modelJson  Will be validated against the attributes
  * @param  {object} attributes  Each property contains the type to be validated
@@ -79,9 +94,10 @@ const _validateAttributes = (modelJson, attributes) => {
         throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`)
       }
 
+      const jsonAttribute = _defaultAttribute(modelJson[attributeName], expected.default)
       const acceptedTypes = comparePropertyToType(expected.acceptedTypes, propTypes.array) ? { ignore: [expected.type, ...expected.acceptedTypes] } : ACCEPTED_TYPES
 
-      if(!validate(modelJson[attributeName], Object.assign({}, expected, { acceptedTypes }))) {
+      if(!validate(jsonAttribute, Object.assign({}, expected, { acceptedTypes }))) {
         validated = false
       }
     } else {
@@ -100,5 +116,6 @@ const _validateAttributes = (modelJson, attributes) => {
 export {
   type,
   validate,
+  _defaultAttribute,
   _validateAttributes,
 }
