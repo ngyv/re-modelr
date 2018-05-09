@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@ngyv/object-utils": "^1.0.1",
-    "@ngyv/prop-utils": "^1.2.0",
+    "@ngyv/prop-utils": "^1.3.3",
     "babel-runtime": "^6.26.0",
     "inflection": "^1.12.0",
     "lodash.camelcase": "^4.3.0",
