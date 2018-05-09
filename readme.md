@@ -5,8 +5,6 @@
 
 > Simple-to-use javascript object-relational mapping store
 
-## Warning => currently ❌ for production
-
 ## Install
 
 ```
@@ -16,7 +14,7 @@ $ npm i @ngyv/re-modelr --save
 
 ## How to use ?
 
-[With mobx](https://github.com/ngyv/re-modelr-mobx-demo)
+### [With MobX](https://github.com/ngyv/re-modelr-mobx-demo)
 
 Default endpoints for DomainStore:
 
@@ -70,14 +68,29 @@ singer.get('name');
 singer.set('name', 'Siti');
 singer.save();
 
+singer.softDelete();
+singer.save();
+
 userStore.listEntries();
 //=> { 1: UserModel, 2: UserModel, length: 2 }
+
+userStore.showEntry(1);
+//=> UserModel
 
 userStore.entries[1];
 //=> { id: 1, name: 'Yuna', status: { isSaving: false, isNew: false, isDeleted: false }, _store: DomainStore, _data:{}, ... }
 
 userStore.entriesArray;
 //=> [UserModel, UserModel]
+
+let newUser = userStore.createRecord({ name: 'Hari' });
+//=> UserModel
+// newUser.status.isNew == true
+
+newUser.save();
+// newUser.status.isNew == false
+
+userStore.deleteEntry(3);
 
 ```
 
