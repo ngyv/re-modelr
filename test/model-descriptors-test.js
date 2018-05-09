@@ -1,6 +1,16 @@
 import test from 'ava'
-import { type, validate, } from  '../lib' // public
-import { _validateAttributes } from '../lib/model-descriptors' // private
+// public
+import {
+  type,
+  validate,
+} from  '../lib'
+
+// private
+import {
+  _defaultAttribute,
+  _validateAttributes,
+} from '../lib/model-descriptors'
+
 import { types as propTypes } from '@ngyv/prop-utils'
 
 test('Model descriptors | type', t => {
@@ -35,6 +45,15 @@ test('Model descriptors | validate', t => {
   t.is(error.message, errorMessage)
 
   t.is(validate(attribute, describedType), false, 'Returns false after warning')
+})
+
+test('Model descriptors | _defaultAttribute', t => {
+  t.plan(4)
+
+  t.is(_defaultAttribute(null, undefined), null, 'Returns original attribute value if default value passed is undefined')
+  t.is(_defaultAttribute(null, 10), null, 'Returns original "null" value if overrideTypes is not passed')
+  t.is(_defaultAttribute(undefined, 'random'), 'random', 'Returns default value if attribute value undefined')
+  t.is(_defaultAttribute(null, 10, [propTypes.null]), 10, 'Returns default value if attribute value is in overrideTypes passed')
 })
 
 test('Model descriptors | _validateAttributes', t => {
