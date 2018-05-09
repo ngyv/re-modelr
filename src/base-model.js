@@ -37,8 +37,8 @@ export default class BaseModel {
   _attributes() {
     return {
       id: type('number', { required: true }),
-      createdAt: type('string'), //TODO: remove hack by adding parser
-      updatedAt: type('string'),
+      createdAt: type('date'),
+      updatedAt: type('date'),
     }
   }
 
