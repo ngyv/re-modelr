@@ -79,8 +79,8 @@ export default class DomainStore {
     console.error(error) // eslint-disable-line no-console
   }
 
-  _fetchAll(params = {}) {
-    return this._api.get(params)
+  _fetchAll(params = {}, headers, credentials) {
+    return this._api.get(params, headers, credentials)
   }
 
   _fetchAllSuccess(data) {
@@ -104,11 +104,11 @@ export default class DomainStore {
     return this.entries
   }
 
-  _fetchOne(params = {}) {
+  _fetchOne(params = {}, headers, credentials) {
     if (!comparePropertyToType(params.id, types.number, { similar: [types.string] })) {
       throw new TypeError('Expected "id" as "number" or "string" in params')
     }
-    return this._api.get(params)
+    return this._api.get(params, headers, credentials)
   }
 
   _fetchOneSuccess(data) {
@@ -131,8 +131,8 @@ export default class DomainStore {
     this.status.isLoading = false
   }
 
-  _createOne(modelJson) {
-    return this._api.post(modelJson)
+  _createOne(modelJson, headers, credentials) {
+    return this._api.post(modelJson, headers, credentials)
   }
 
   _createOneSuccess(data) {
@@ -144,8 +144,8 @@ export default class DomainStore {
     modelEntry.status.isNew = false
   }
 
-  _updateOne(modelEntry) {
-    return this._api.put(modelEntry._serialize())
+  _updateOne(modelEntry, headers, credentials) {
+    return this._api.put(modelEntry._serialize(), headers, credentials)
   }
 
   _updateOneSuccess(data) {
@@ -160,8 +160,8 @@ export default class DomainStore {
     return dataArray.map((data) => this._updateOneSuccess(data))
   }
 
-  _deleteOne(modelEntry) {
-    return this._api.delete(modelEntry)
+  _deleteOne(modelEntry, headers, credentials) {
+    return this._api.delete(modelEntry, headers, credentials)
   }
 
   _deleteOneFinally(modelEntry) {
