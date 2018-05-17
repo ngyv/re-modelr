@@ -1,4 +1,6 @@
-# re-modelr [![Build Status](https://travis-ci.org/ngyv/re-modelr.svg?branch=master)](https://travis-ci.org/ngyv/re-modelr) [![npm version](https://badge.fury.io/js/%40ngyv%2Fre-modelr.svg)](https://badge.fury.io/js/%40ngyv%2Fre-modelr) [![codecov](https://codecov.io/gh/ngyv/re-modelr/badge.svg?branch=master)](https://codecov.io/gh/ngyv/re-modelr?branch=master) [![npm download](https://img.shields.io/npm/dt/@ngyv/re-modelr.svg)](https://www.npmjs.com/package/@ngyv/re-modelr) [![Greenkeeper badge](https://badges.greenkeeper.io/ngyv/re-modelr.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/ngyv/re-modelr.svg?branch=master)](https://travis-ci.org/ngyv/re-modelr) [![npm version](https://badge.fury.io/js/%40ngyv%2Fre-modelr.svg)](https://badge.fury.io/js/%40ngyv%2Fre-modelr) [![codecov](https://codecov.io/gh/ngyv/re-modelr/badge.svg?branch=master)](https://codecov.io/gh/ngyv/re-modelr?branch=master) [![npm download](https://img.shields.io/npm/dt/@ngyv/re-modelr.svg)](https://www.npmjs.com/package/@ngyv/re-modelr) [![Greenkeeper badge](https://badges.greenkeeper.io/ngyv/re-modelr.svg)](https://greenkeeper.io/)
+
+# re-modelr
 
 
 
@@ -11,10 +13,11 @@
 $ npm i @ngyv/re-modelr --save
 ```
 
+## Quick Start
 
-## How to use ?
+### [API](docs.md) documentation
 
-### [With MobX](https://github.com/ngyv/re-modelr-mobx-demo)
+### [With MobX](https://github.com/ngyv/re-modelr-mobx-demo) ( [Demo](https://ngyv.github.io/re-modelr-mobx-demo/) )
 
 Default endpoints for DomainStore:
 
@@ -94,7 +97,7 @@ userStore.deleteEntry(3);
 
 ```
 
-For more on the api, please look at the test files 😃
+For more on the api, see the [**docs**](docs.md) 😃
 
 ## License
 
