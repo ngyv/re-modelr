@@ -12,7 +12,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "prepublishOnly": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
+    "prepublishOnly": "node_modules/babel-cli/bin/babel.js src --no-comments --out-dir lib",
     "cov": "AVA_PLAYBACK=play nyc ava",
     "lint": "npm run prepublishOnly && xo --cwd=src",
     "test": "npm run prepublishOnly && NODE_ENV=test AVA_PLAYBACK=play nyc ava"
