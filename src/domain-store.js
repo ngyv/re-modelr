@@ -5,9 +5,11 @@ const { setObject, mergeObject } = objectUtils
 
 import snakecase from 'lodash.snakecase'
 
-/*  Base store wrapper that handles fetching data from the server.
- *  Endpoints are dependant on the model name that extends from this.
- *
+/**
+ * Base class for store that handles fetching data from the server.
+ * @class DomainStore
+ * @description - Endpoints are dependant on the model name that extends from this.
+ *  ```js
  *  Default endpoints:
  *    GET       /modelName            List of entries
  *    GET       /modelName/:id        Show entry details
@@ -15,24 +17,24 @@ import snakecase from 'lodash.snakecase'
  *    PUT       /modelName/:id        Update entry
  *    DELETE    /modelName/:id        Delete entry
  *
- *  [NOT CONFIRMED]    Endpoints dependant on @param {children=[]}
- *    PUT       /modelName/:id/childModelName/:childId        Associates child to parent (does not create)
- *    DELETE    /modelName/:id/childModelName/:childId        Dissociates child from parent (does not delete)
- *
  *  Required params:
- *    @param { ModelClass=Model }
- *      an alias class wrapper
+ *   {Object} ModelClass - an alias class wrapper
  *
  *  Optional params in options:
- *   @param { basePath='string' }
- *   [NOT CONFIRMED]   @param { children=[] }
+ *   {String} [basePath='/api']
+ *   {String} [modelName=ModelClass.name]
+ *  ```
  */
-
 export default class DomainStore {
   _api = {}
   entries = { length: 0 }
   status = { isLoading: false, listedAll: false }
 
+  /**
+   * Creates a domain store to handle api calls to server
+   * @param {Object} ModelClass - Model class reference to wrap data around
+   * @param {Object} [options={ basePath: '/api', modelName: modelClass.name.toLowerCase() }]
+   */
   constructor(ModelClass, options = { basePath: '/api', modelName: '' }) {
     this.ModelClass = ModelClass
     this.modelName = options.modelName || this.ModelClass.name.toLowerCase()
@@ -40,18 +42,31 @@ export default class DomainStore {
     // this._processModelRelationships()
   }
 
-  // returns
+  /**
+   * Generates api object that is called based on default endpoints
+   * @param  {String} basePath
+   * @param  {String} modelName
+   */
   _generateApi(basePath, modelName) {
     this._api = generateApi(basePath, modelName)
   }
 
-  // Only creates a model object but doesn't push to store
+  /**
+   * Creates a model object but doesn't push to store
+   * @param  {Object} modelJson
+   * @param  {Object} modelStatus - override default status in model
+   * @return {Object} - new record instance created
+   */
   _createRecord(modelJson, modelStatus) {
     let record = new this.ModelClass(this, modelJson, modelStatus)
     return record
   }
 
-  // Gets an array of json and convert it into a hash of models with id as key
+  /**
+   * Convert an array of json and into an object of models with id as key
+   * @param  {Array} models - containing each model json data
+   * @return {Object} - normalized models object for easy model retrieval
+   */
   _normalizeModels(models) {
     return models.reduce((modelsHash, modelJson) => {
       modelsHash[modelJson.id] = this._createRecord(modelJson)
@@ -59,12 +74,21 @@ export default class DomainStore {
     }, { length: models.length })
   }
 
+  /**
+   * Adds model to store `entries`
+   * @param  {Object} modelJson
+   * @return {Object} model entry
+   */
   _pushEntry(modelJson) {
     const entryChanges = { [`${modelJson.id}`]: this._createRecord(modelJson), length: parseInt(this.entries.length) + 1 }
     this.entries = Object.assign({}, this.entries, entryChanges)
     return this.entries[modelJson.id]
   }
 
+  /**
+   * Deletes entry by id from store `entries`
+   * @param  {(number|string)} id - of model to be deleted
+   */
   _deleteEntry(id) {
     this.entries = this.entriesArray.reduce((newEntries, entry) => {
       if (entry.id !== id) {
@@ -169,19 +193,31 @@ export default class DomainStore {
     modelEntry.status.isDeleted = true
   }
 
-  //--
-
-  //-- always hits cache
+  /**
+   * Getter function that returns array representation of `entries`
+   * @return {Array}
+   */
   get entriesArray() {
     let allKeys = Object.assign({}, this.entries)
     delete allKeys.length
     return Object.keys(allKeys).map((key) => this.entries[key])
   }
 
+  /**
+   * Returns cached `entries`
+   * @param  {boolean} toJson - determines if the object return is serialized (format fetched by server)
+   * @return {Object}
+   */
   all(toJson) {
     return toJson ? this.entriesArray.map((entry) => entry._serialize()) : this.entries
   }
 
+  /**
+   * Returns cached entry based on id
+   * @param  {(number|string)} id
+   * @param  {boolean} toJson - determines if the object return is serialized (format fetched by server)
+   * @return {Object}
+   */
   find(id, toJson) {
     if (!comparePropertyToType(id, types.number, { similar: [types.string] })) {
       throw new TypeError('Expected "id" as "number" or "string"')
@@ -189,9 +225,16 @@ export default class DomainStore {
     const entry = this.entries[id]
     return toJson ? entry._serialize() : entry
   }
-  //--
 
-  //-- hits cache before dispatching network request (returns promise)
+  /**
+   * Checks cached `entries` before dispatching network request
+   * @param  {(number|string)} id - of model or entry
+   * @param  {Object} params - additional search params for api call
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   * @return {Promise}
+   */
   findOrShowEntry(id, params, { successCallback, errorCallback, finallyCallback } = {}) {
     const cache = this.find(id)
     if (!cache) {
@@ -200,6 +243,15 @@ export default class DomainStore {
     return Promise.resolve(cache)
   }
 
+  /**
+   * Checks if any entries are available before making network request
+   * @param  {boolean} toJson - determines if the object return is serialized (format fetched by server)
+   * @param  {Object} params - additional search params for api call
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   * @return {Promise}
+   */
   allOrListEntries(toJson, params, { successCallback, errorCallback, finallyCallback } = {}) {
     const cache = this.all(toJson)
     if (!cache.length) {
@@ -207,8 +259,15 @@ export default class DomainStore {
     }
     return Promise.resolve(cache)
   }
-  //--
 
+  /**
+   * Makes network request to get all.
+   * @param  {Object}  params - additional search params for api call
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   * @return {Promise} - containing the models
+   */
   async listEntries(params, { successCallback, errorCallback, finallyCallback } = {}) {
     successCallback = successCallback || this._fetchAllSuccess.bind(this)
     errorCallback = errorCallback || this._genericError.bind(this)
@@ -229,6 +288,15 @@ export default class DomainStore {
     return models
   }
 
+  /**
+   * Makes network request to get model by id
+   * @param  {(String|Number)}  id
+   * @param  {Object}  params - additional search params for api call
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   * @return {Promise} - containing the model
+   */
   async showEntry(id, params, { successCallback, errorCallback, finallyCallback } = {}) {
     if (!comparePropertyToType(id, types.number, { similar: [types.string] })) {
       throw new TypeError('Expected "id" as "number" or "string"')
@@ -252,15 +320,22 @@ export default class DomainStore {
     return model
   }
 
-  /* *
-   *  Creates the model object but doesn't persist it until the model.save() is called
+  /**
+   * Creates the model object but doesn't persist it until the `model.save()`
+   * @param  {Object} modelJson
+   * @return {Model}
    */
   createRecord(modelJson) {
     return this._createRecord(modelJson, { isNew: true })
   }
 
-  /* *
-   * Accepts modelEntry or modelJson
+  /**
+   * Makes a post network request
+   * @param  {(Model|Object)}  modelEntryJson
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   * @return {Promise} - containing newly created model
    */
   async createEntry(modelEntryJson, { successCallback, errorCallback, finallyCallback } = {}) {
     // pre-processing
@@ -291,6 +366,14 @@ export default class DomainStore {
     return modelEntry
   }
 
+  /**
+   * Makes a put network request to update an existing model
+   * @param  {Model}  modelEntry
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   * @return {Promise} - containing updated model
+   */
   async updateEntry(modelEntry, { successCallback, errorCallback, finallyCallback } = {}) {
     successCallback = successCallback || this._updateOneSuccess.bind(this)
     errorCallback = errorCallback || this._genericError.bind(this)
@@ -309,6 +392,13 @@ export default class DomainStore {
     return modelEntry
   }
 
+  /**
+   * Makes multiple put network requests to update models
+   * @param  {Array.<Model>|Object.<Model>}  modelEntriesObjectArray
+   * @param  {Function} successCallback - will override default success callback function
+   * @param  {Function} errorCallback - will override default error callback function
+   * @return {Promise} - containing the updated models
+   */
   async updateEntries(modelEntriesObjectArray, { successCallback, errorCallback } = {}) {
     let modelEntries = modelEntriesObjectArray
     if (comparePropertyToType(modelEntriesObjectArray, types.object)) {
@@ -329,6 +419,12 @@ export default class DomainStore {
     return modelEntries
   }
 
+  /**
+   * Makes delete network request
+   * @param  {(String|Number)} modelId
+   * @param  {Function} errorCallback - will override default error callback function
+   * @param  {Function} finallyCallback - will override default callback function after api call
+   */
   deleteEntry(modelId, { errorCallback, finallyCallback } = {}) {
     if (!comparePropertyToType(modelId, types.number, { similar: [types.string] })) {
       throw new TypeError('Expected "modelId" of type "number" or "string"')

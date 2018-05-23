@@ -9,7 +9,8 @@ import objectUtils from '@ngyv/object-utils'
 const { get, set, setObject, pluckSubset, difference } = objectUtils
 
 /**
- * @typedef {Class} BaseModel
+ * Base class for model instances created based on data fetched from server.
+ * @class BaseModel
  */
 export default class BaseModel {
   _data = {}

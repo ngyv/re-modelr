@@ -14,12 +14,30 @@
     -   [softDelete][10]
     -   [delete][11]
     -   [discardChanges][12]
--   [type][13]
--   [validate][14]
+-   [DomainStore][13]
+    -   [\_generateApi][14]
+    -   [\_createRecord][15]
+    -   [\_normalizeModels][16]
+    -   [\_pushEntry][17]
+    -   [\_deleteEntry][18]
+    -   [entriesArray][19]
+    -   [all][20]
+    -   [find][21]
+    -   [findOrShowEntry][22]
+    -   [allOrListEntries][23]
+    -   [listEntries][24]
+    -   [showEntry][25]
+    -   [createRecord][26]
+    -   [createEntry][27]
+    -   [updateEntry][28]
+    -   [updateEntries][29]
+    -   [deleteEntry][30]
+-   [type][31]
+-   [validate][32]
 
 ## BaseModel
 
-Type: Class
+Base class for model instances created based on data fetched from server.
 
 ### \_attributes
 
@@ -33,7 +51,7 @@ return {
 }
 ```
 
-Returns **[Object][15]** containing attributes of model and the type
+Returns **[Object][33]** containing attributes of model and the type
 
 ### \_cache
 
@@ -41,9 +59,9 @@ Sets `_data` based on json during instantiation
 
 **Parameters**
 
--   `data` **[Object][15]** 
+-   `data` **[Object][33]** 
 
-Returns **[undefined][16]** 
+Returns **[undefined][34]** 
 
 ### \_deserialize
 
@@ -51,15 +69,15 @@ Deserializes json data fetched with camelcase keys
 
 **Parameters**
 
--   `modelJson` **[Object][15]** 
+-   `modelJson` **[Object][33]** 
 
-Returns **[Object][15]** \_data
+Returns **[Object][33]** \_data
 
 ### \_serialize
 
 Serializes `_data` with snakecase keys
 
-Returns **[Object][15]** 
+Returns **[Object][33]** 
 
 ### \_validateAttributes
 
@@ -67,41 +85,288 @@ Validates the attributes against that described in `_attributes`
 
 **Parameters**
 
--   `modelJson` **[Object][15]** 
+-   `modelJson` **[Object][33]** 
 
-Returns **[Boolean][17]** 
+Returns **[Boolean][35]** 
 
 ### isDirty
 
-Returns **[Boolean][17]** indicator if the model is dirty
+Returns **[Boolean][35]** indicator if the model is dirty
 
 ### changedAttributes
 
-Returns **[Object][15]** difference object between \_data from server and model properties
+Returns **[Object][33]** difference object between \_data from server and model properties
 
 ### save
 
 Saves the changes made to the model instance to server
 
-Returns **[Object][15]** promise by domain store following the api call
+Returns **[Object][33]** promise by domain store following the api call
 
 ### softDelete
 
 Marks `isDeleted` status as true so that the change is propogated when `save` is called
 
-Returns **[undefined][16]** 
+Returns **[undefined][34]** 
 
 ### delete
 
 Deletes the model via domain store
 
-Returns **[Object][15]** promise by domain store
+Returns **[Object][33]** promise by domain store
 
 ### discardChanges
 
 Discards changes made to model based on `_data`
 
-Returns **[undefined][16]** 
+Returns **[undefined][34]** 
+
+## DomainStore
+
+Endpoints are dependant on the model name that extends from this.
+
+```js
+Default endpoints:
+  GET       /modelName            List of entries
+  GET       /modelName/:id        Show entry details
+  POST      /modelName            Create new entry
+  PUT       /modelName/:id        Update entry
+  DELETE    /modelName/:id        Delete entry
+
+Required params:
+ {Object} ModelClass - an alias class wrapper
+
+Optional params in options:
+ {String} [basePath='/api']
+ {String} [modelName=ModelClass.name]
+```
+
+### \_generateApi
+
+Generates api object that is called based on default endpoints
+
+**Parameters**
+
+-   `basePath` **[String][36]** 
+-   `modelName` **[String][36]** 
+
+### \_createRecord
+
+Creates a model object but doesn't push to store
+
+**Parameters**
+
+-   `modelJson` **[Object][33]** 
+-   `modelStatus` **[Object][33]** override default status in model
+
+Returns **[Object][33]** new record instance created
+
+### \_normalizeModels
+
+Convert an array of json and into an object of models with id as key
+
+**Parameters**
+
+-   `models` **[Array][37]** containing each model json data
+
+Returns **[Object][33]** normalized models object for easy model retrieval
+
+### \_pushEntry
+
+Adds model to store `entries`
+
+**Parameters**
+
+-   `modelJson` **[Object][33]** 
+
+Returns **[Object][33]** model entry
+
+### \_deleteEntry
+
+Deletes entry by id from store `entries`
+
+**Parameters**
+
+-   `id` **([number][38] \| [string][36])** of model to be deleted
+
+### entriesArray
+
+Getter function that returns array representation of `entries`
+
+Returns **[Array][37]** 
+
+### all
+
+Returns cached `entries`
+
+**Parameters**
+
+-   `toJson` **[boolean][35]** determines if the object return is serialized (format fetched by server)
+
+Returns **[Object][33]** 
+
+### find
+
+Returns cached entry based on id
+
+**Parameters**
+
+-   `id` **([number][38] \| [string][36])** 
+-   `toJson` **[boolean][35]** determines if the object return is serialized (format fetched by server)
+
+Returns **[Object][33]** 
+
+### findOrShowEntry
+
+Checks cached `entries` before dispatching network request
+
+**Parameters**
+
+-   `id` **([number][38] \| [string][36])** of model or entry
+-   `params` **[Object][33]** additional search params for api call
+-   `$2` **[Object][33]**  (optional, default `{}`)
+    -   `$2.successCallback`  
+    -   `$2.errorCallback`  
+    -   `$2.finallyCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+Returns **[Promise][40]** 
+
+### allOrListEntries
+
+Checks if any entries are available before making network request
+
+**Parameters**
+
+-   `toJson` **[boolean][35]** determines if the object return is serialized (format fetched by server)
+-   `params` **[Object][33]** additional search params for api call
+-   `$2` **[Object][33]**  (optional, default `{}`)
+    -   `$2.successCallback`  
+    -   `$2.errorCallback`  
+    -   `$2.finallyCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+Returns **[Promise][40]** 
+
+### listEntries
+
+Makes network request to get all.
+
+**Parameters**
+
+-   `params` **[Object][33]** additional search params for api call
+-   `$1` **[Object][33]**  (optional, default `{}`)
+    -   `$1.successCallback`  
+    -   `$1.errorCallback`  
+    -   `$1.finallyCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+Returns **[Promise][40]** containing the models
+
+### showEntry
+
+Makes network request to get model by id
+
+**Parameters**
+
+-   `id` **([String][36] \| [Number][38])** 
+-   `params` **[Object][33]** additional search params for api call
+-   `$2` **[Object][33]**  (optional, default `{}`)
+    -   `$2.successCallback`  
+    -   `$2.errorCallback`  
+    -   `$2.finallyCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+Returns **[Promise][40]** containing the model
+
+### createRecord
+
+Creates the model object but doesn't persist it until the `model.save()`
+
+**Parameters**
+
+-   `modelJson` **[Object][33]** 
+
+Returns **Model** 
+
+### createEntry
+
+Makes a post network request
+
+**Parameters**
+
+-   `modelEntryJson` **(Model | [Object][33])** 
+-   `$1` **[Object][33]**  (optional, default `{}`)
+    -   `$1.successCallback`  
+    -   `$1.errorCallback`  
+    -   `$1.finallyCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+Returns **[Promise][40]** containing newly created model
+
+### updateEntry
+
+Makes a put network request to update an existing model
+
+**Parameters**
+
+-   `modelEntry` **Model** 
+-   `$1` **[Object][33]**  (optional, default `{}`)
+    -   `$1.successCallback`  
+    -   `$1.errorCallback`  
+    -   `$1.finallyCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+Returns **[Promise][40]** containing updated model
+
+### updateEntries
+
+Makes multiple put network requests to update models
+
+**Parameters**
+
+-   `modelEntriesObjectArray` **([Array][37]&lt;Model> | [Object][33]&lt;Model>)** 
+-   `$1` **[Object][33]**  (optional, default `{}`)
+    -   `$1.successCallback`  
+    -   `$1.errorCallback`  
+-   `successCallback` **[Function][39]** will override default success callback function
+-   `errorCallback` **[Function][39]** will override default error callback function
+
+Returns **[Promise][40]** containing the updated models
+
+### deleteEntry
+
+Makes delete network request
+
+**Parameters**
+
+-   `modelId` **([String][36] \| [Number][38])** 
+-   `$1` **[Object][33]**  (optional, default `{}`)
+    -   `$1.errorCallback`  
+    -   `$1.finallyCallback`  
+-   `errorCallback` **[Function][39]** will override default error callback function
+-   `finallyCallback` **[Function][39]** will override default callback function after api call
+
+## 
+
+Creates a domain store to handle api calls to server
+
+**Parameters**
+
+-   `ModelClass` **[Object][33]** Model class reference to wrap data around
+-   `options` **[Object][33]**  (optional, default `{basePath:'/api',modelName:modelClass.name.toLowerCase()}`)
 
 ## type
 
@@ -109,21 +374,21 @@ Takes in model descriptors and returns a flat object
 
 **Parameters**
 
--   `typeName` **[string][18]** String representation of prop types
+-   `typeName` **[string][36]** String representation of prop types
 -   `options`   (optional, default `{}`)
--   `required` **[boolean][17]** Indicates validation
--   `default` **([number][19] \| [boolean][17] \| [string][18] \| [array][20] \| [object][15])** Fallback value
+-   `required` **[boolean][35]** Indicates validation
+-   `default` **([number][38] \| [boolean][35] \| [string][36] \| [array][37] \| [object][33])** Fallback value
 
-Returns **[object][15]** 
+Returns **[object][33]** 
 
 ## validate
 
 **Parameters**
 
 -   `attribute` **any** To be validated on
--   `type` **[object][15]** To be validated against and is generated by `type` function (optional, default `{}`)
+-   `type` **[object][33]** To be validated against and is generated by `type` function (optional, default `{}`)
 
-Returns **[boolean][17]** 
+Returns **[boolean][35]** 
 
 [1]: #basemodel
 
@@ -149,18 +414,58 @@ Returns **[boolean][17]**
 
 [12]: #discardchanges
 
-[13]: #type
+[13]: #domainstore
 
-[14]: #validate
+[14]: #_generateapi
 
-[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[15]: #_createrecord
 
-[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[16]: #_normalizemodels
 
-[17]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[17]: #_pushentry
 
-[18]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[18]: #_deleteentry
 
-[19]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[19]: #entriesarray
 
-[20]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[20]: #all
+
+[21]: #find
+
+[22]: #findorshowentry
+
+[23]: #allorlistentries
+
+[24]: #listentries
+
+[25]: #showentry
+
+[26]: #createrecord
+
+[27]: #createentry
+
+[28]: #updateentry
+
+[29]: #updateentries
+
+[30]: #deleteentry
+
+[31]: #type
+
+[32]: #validate
+
+[33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+
+[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[38]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[40]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
