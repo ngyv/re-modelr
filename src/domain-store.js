@@ -216,17 +216,17 @@ export default class DomainStore {
 
     this.status.isLoading = true
     let data = null
-    let model = null
+    let models = null
 
     try {
       data = await this._fetchAll(params)
-      model = successCallback(data)
+      models = successCallback(data)
     } catch(error) {
       errorCallback(error)
     } finally {
       finallyCallback()
     }
-    return model
+    return models
   }
 
   async showEntry(id, params, { successCallback, errorCallback, finallyCallback } = {}) {
