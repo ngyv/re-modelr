@@ -130,11 +130,12 @@ userStore.deleteEntry(3);
 -   [type][31]
 -   [validate][32]
 
-### BaseModel
+## BaseModel
+[_(source)_](https://github.com/ngyv/re-modelr/blob/master/src/base-model.js#L15)
 
 Base class for model instances created based on data fetched from server.
 
-#### \_attributes
+### \_attributes
 
 Declares the model attributes which will be validated
 
@@ -148,75 +149,76 @@ return {
 
 Returns **[Object][33]** containing attributes of model and the type
 
-#### \_cache
+### \_cache
 
 Sets `_data` based on json during instantiation
 
-**Parameters**
+Parameters:
 
 -   `data` **[Object][33]**
 
 Returns **[undefined][34]**
 
-#### \_deserialize
+### \_deserialize
 
 Deserializes json data fetched with camelcase keys
 
-**Parameters**
+Parameters:
 
 -   `modelJson` **[Object][33]**
 
 Returns **[Object][33]** \_data
 
-#### \_serialize
+### \_serialize
 
 Serializes `_data` with snakecase keys
 
 Returns **[Object][33]**
 
-#### \_validateAttributes
+### \_validateAttributes
 
 Validates the attributes against that described in `_attributes`
 
-**Parameters**
+Parameters:
 
 -   `modelJson` **[Object][33]**
 
 Returns **[Boolean][35]**
 
-#### isDirty
+### isDirty
 
 Returns **[Boolean][35]** indicator if the model is dirty
 
-#### changedAttributes
+### changedAttributes
 
 Returns **[Object][33]** difference object between \_data from server and model properties
 
-#### save
+### save
 
 Saves the changes made to the model instance to server
 
 Returns **[Object][33]** promise by domain store following the api call
 
-#### softDelete
+### softDelete
 
 Marks `isDeleted` status as true so that the change is propogated when `save` is called
 
 Returns **[undefined][34]**
 
-#### delete
+### delete
 
 Deletes the model via domain store
 
 Returns **[Object][33]** promise by domain store
 
-#### discardChanges
+### discardChanges
 
 Discards changes made to model based on `_data`
 
 Returns **[undefined][34]**
 
-### DomainStore
+## DomainStore
+[_(source)_](https://github.com/ngyv/re-modelr/blob/master/src/base-model.js#L15)
 
 Endpoints are dependant on the model name that extends from this.
 
@@ -236,86 +238,86 @@ Optional params in options:
  {String} [modelName=ModelClass.name]
 ```
 
-#### \_generateApi
+### \_generateApi
 
 Generates api object that is called based on default endpoints
 
-**Parameters**
+Parameters:
 
 -   `basePath` **[String][36]**
 -   `modelName` **[String][36]**
 
-#### \_createRecord
+### \_createRecord
 
 Creates a model object but doesn't push to store
 
-**Parameters**
+Parameters:
 
 -   `modelJson` **[Object][33]**
 -   `modelStatus` **[Object][33]** override default status in model
 
 Returns **[Object][33]** new record instance created
 
-#### \_normalizeModels
+### \_normalizeModels
 
 Convert an array of json and into an object of models with id as key
 
-**Parameters**
+Parameters:
 
 -   `models` **[Array][37]** containing each model json data
 
 Returns **[Object][33]** normalized models object for easy model retrieval
 
-#### \_pushEntry
+### \_pushEntry
 
 Adds model to store `entries`
 
-**Parameters**
+Parameters:
 
 -   `modelJson` **[Object][33]**
 
 Returns **[Object][33]** model entry
 
-#### \_deleteEntry
+### \_deleteEntry
 
 Deletes entry by id from store `entries`
 
-**Parameters**
+Parameters:
 
 -   `id` **([number][38] \| [string][36])** of model to be deleted
 
-#### entriesArray
+### entriesArray
 
 Getter function that returns array representation of `entries`
 
 Returns **[Array][37]**
 
-#### all
+### all
 
 Returns cached `entries`
 
-**Parameters**
+Parameters:
 
 -   `toJson` **[boolean][35]** determines if the object return is serialized (format fetched by server)
 
 Returns **[Object][33]**
 
-#### find
+### find
 
 Returns cached entry based on id
 
-**Parameters**
+Parameters:
 
 -   `id` **([number][38] \| [string][36])**
 -   `toJson` **[boolean][35]** determines if the object return is serialized (format fetched by server)
 
 Returns **[Object][33]**
 
-#### findOrShowEntry
+### findOrShowEntry
 
 Checks cached `entries` before dispatching network request
 
-**Parameters**
+Parameters:
 
 -   `id` **([number][38] \| [string][36])** of model or entry
 -   `params` **[Object][33]** additional search params for api call
@@ -329,11 +331,11 @@ Checks cached `entries` before dispatching network request
 
 Returns **[Promise][40]**
 
-#### allOrListEntries
+### allOrListEntries
 
 Checks if any entries are available before making network request
 
-**Parameters**
+Parameters:
 
 -   `toJson` **[boolean][35]** determines if the object return is serialized (format fetched by server)
 -   `params` **[Object][33]** additional search params for api call
@@ -347,11 +349,11 @@ Checks if any entries are available before making network request
 
 Returns **[Promise][40]**
 
-#### listEntries
+### listEntries
 
 Makes network request to get all.
 
-**Parameters**
+Parameters:
 
 -   `params` **[Object][33]** additional search params for api call
 -   `$1` **[Object][33]**  (optional, default `{}`)
@@ -364,11 +366,11 @@ Makes network request to get all.
 
 Returns **[Promise][40]** containing the models
 
-#### showEntry
+### showEntry
 
 Makes network request to get model by id
 
-**Parameters**
+Parameters:
 
 -   `id` **([String][36] \| [Number][38])**
 -   `params` **[Object][33]** additional search params for api call
@@ -382,21 +384,21 @@ Makes network request to get model by id
 
 Returns **[Promise][40]** containing the model
 
-#### createRecord
+### createRecord
 
 Creates the model object but doesn't persist it until the `model.save()`
 
-**Parameters**
+Parameters:
 
 -   `modelJson` **[Object][33]**
 
 Returns **Model**
 
-#### createEntry
+### createEntry
 
 Makes a post network request
 
-**Parameters**
+Parameters:
 
 -   `modelEntryJson` **(Model | [Object][33])**
 -   `$1` **[Object][33]**  (optional, default `{}`)
@@ -409,11 +411,11 @@ Makes a post network request
 
 Returns **[Promise][40]** containing newly created model
 
-#### updateEntry
+### updateEntry
 
 Makes a put network request to update an existing model
 
-**Parameters**
+Parameters:
 
 -   `modelEntry` **Model**
 -   `$1` **[Object][33]**  (optional, default `{}`)
@@ -426,11 +428,11 @@ Makes a put network request to update an existing model
 
 Returns **[Promise][40]** containing updated model
 
-#### updateEntries
+### updateEntries
 
 Makes multiple put network requests to update models
 
-**Parameters**
+Parameters:
 
 -   `modelEntriesObjectArray` **([Array][37]&lt;Model> | [Object][33]&lt;Model>)**
 -   `$1` **[Object][33]**  (optional, default `{}`)
@@ -441,11 +443,11 @@ Makes multiple put network requests to update models
 
 Returns **[Promise][40]** containing the updated models
 
-#### deleteEntry
+### deleteEntry
 
 Makes delete network request
 
-**Parameters**
+Parameters:
 
 -   `modelId` **([String][36] \| [Number][38])**
 -   `$1` **[Object][33]**  (optional, default `{}`)
@@ -458,16 +460,17 @@ Makes delete network request
 
 Creates a domain store to handle api calls to server
 
-**Parameters**
+Parameters:
 
 -   `ModelClass` **[Object][33]** Model class reference to wrap data around
 -   `options` **[Object][33]**  (optional, default `{basePath:'/api',modelName:modelClass.name.toLowerCase()}`)
 
 ## type
+[_(source)_](https://github.com/ngyv/re-modelr/blob/master/src/model-descriptors.js#L28)
 
 Takes in model descriptors and returns a flat object
 
-**Parameters**
+Parameters:
 
 -   `typeName` **[string][36]** String representation of prop types
 -   `options`   (optional, default `{}`)
@@ -477,8 +480,9 @@ Takes in model descriptors and returns a flat object
 Returns **[object][33]**
 
 ## validate
+[_(source)_](https://github.com/ngyv/re-modelr/blob/master/src/model-descriptors.js#L47)
 
-**Parameters**
+Parameters:
 
 -   `attribute` **any** To be validated on
 -   `type` **[object][33]** To be validated against and is generated by `type` function (optional, default `{}`)
