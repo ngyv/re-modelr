@@ -58,7 +58,7 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "ava-http": "^1.0.0",
-    "ava-playback": "0.0.14",
+    "ava-playback": "0.0.15",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.3",
