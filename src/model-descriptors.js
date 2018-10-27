@@ -12,6 +12,10 @@ const TYPE_OPTIONS_WHITELIST = Object.freeze([
   'acceptedTypes'
 ])
 
+const BELONGS_TO_OPTIONS_WHITELIST = Object.freeze([
+  'id',
+])
+
 const TYPE_NAMES_WHITELIST = Object.keys(propTypes)
 
 const ACCEPTED_TYPES = Object.freeze({
@@ -33,6 +37,18 @@ const type = (typeName, options = {}) => {
   return _allowedOptions(options, {
     whitelist: TYPE_OPTIONS_WHITELIST,
     defaultOptions: { _type: propTypes[typeName] }
+  })
+}
+
+const belongsTo = (parentName, options = {}) => {
+  if (!comparePropertyToType(parentName, propTypes.string)) {
+    // TODO: figure out how to check if model for parentName exists
+    throw new TypeError(`Unexpected "${parentName}" passed as "parentName"`)
+  }
+
+  return _allowedOptions(options, {
+    whitelist: BELONGS_TO_OPTIONS_WHITELIST,
+    defaultOptions: { _type: 'relationship' }
   })
 }
 
@@ -89,11 +105,13 @@ const _validateAttributes = (modelJson, attributes) => {
 
     // model descriptors
     if (comparePropertyToType(expected, propTypes.object)) {
+      // TODO: need to account for relationship
       if (!expected._type) {
         throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`)
       }
 
       const jsonAttribute = _defaultAttribute(modelJson[attributeName], expected.default)
+      // TODO: need to account for relationship
       const parsedJsonAttribute = parseValueToType(jsonAttribute, expected._type)
       const acceptedTypes = comparePropertyToType(expected.acceptedTypes, propTypes.array) ? { ignore: [expected._type, ...expected.acceptedTypes] } : ACCEPTED_TYPES
 
@@ -129,6 +147,7 @@ const _allowedOptions = function(options, { whitelist, defaultOptions } = {}) {
 
 export {
   type,
+  belongsTo,
   validate,
   _defaultAttribute,
   _validateAttributes,
