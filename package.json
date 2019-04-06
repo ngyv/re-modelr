@@ -58,10 +58,10 @@
   "devDependencies": {
     "ava": "^1.0.1",
     "ava-http": "^1.0.0",
-    "ava-playback": "0.0.14",
+    "ava-playback": "0.0.15",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.3",
+    "babel-eslint": "^9.0.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
