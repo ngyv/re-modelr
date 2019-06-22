@@ -70,7 +70,7 @@
     "babel-preset-es2017": "^6.24.1",
     "browser-env": "^3.2.5",
     "codecov": "^3.0.1",
-    "eslint": "^5.14.0",
+    "eslint": "^6.0.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "nyc": "^13.2.0",
