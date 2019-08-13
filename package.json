@@ -75,7 +75,7 @@
     "eslint-plugin-import": "^2.11.0",
     "nyc": "^13.2.0",
     "xo": "^0.24.0",
-    "webpack": "^4.16.5"
+    "webpack": "^4.39.2"
   },
   "nyc": {
     "reporter": [
