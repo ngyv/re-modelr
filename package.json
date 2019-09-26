@@ -74,7 +74,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "nyc": "^13.2.0",
-    "xo": "^0.24.0",
+    "xo": "^0.25.2",
     "webpack": "^4.16.5"
   },
   "nyc": {
