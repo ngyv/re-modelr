@@ -6,13 +6,17 @@ import {
   parseValueToType,
 } from '@ngyv/prop-utils'
 
-const TYPE_OPTIONS = Object.freeze([
+const TYPE_OPTIONS_WHITELIST = Object.freeze([
   'required',
   'default',
   'acceptedTypes'
 ])
 
-const TYPE_NAMES = Object.keys(propTypes)
+const BELONGS_TO_OPTIONS_WHITELIST = Object.freeze([
+  'id',
+])
+
+const TYPE_NAMES_WHITELIST = Object.keys(propTypes)
 
 const ACCEPTED_TYPES = Object.freeze({
   nil: [propTypes.undefined, propTypes.null],
@@ -26,16 +30,26 @@ const ACCEPTED_TYPES = Object.freeze({
  * @return {object}
  */
 const type = (typeName, options = {}) => {
-  if (!TYPE_NAMES.includes(typeName)) {
+  if (!TYPE_NAMES_WHITELIST.includes(typeName)) {
     throw new TypeError(`Unexpected "${typeName}" passed as "typeName"`)
   }
 
-  return Object.keys(options).reduce((hashType, optionKey) => {
-    if (TYPE_OPTIONS.includes(optionKey)) {
-      hashType[optionKey] = options[optionKey]
-    }
-    return hashType
-  }, { type: propTypes[typeName] })
+  return _allowedOptions(options, {
+    whitelist: TYPE_OPTIONS_WHITELIST,
+    defaultOptions: { _type: propTypes[typeName] }
+  })
+}
+
+const belongsTo = (parentName, options = {}) => {
+  if (!comparePropertyToType(parentName, propTypes.string)) {
+    // TODO: figure out how to check if model for parentName exists
+    throw new TypeError(`Unexpected "${parentName}" passed as "parentName"`)
+  }
+
+  return _allowedOptions(options, {
+    whitelist: BELONGS_TO_OPTIONS_WHITELIST,
+    defaultOptions: { _type: 'relationship' }
+  })
 }
 
 /**
@@ -45,10 +59,10 @@ const type = (typeName, options = {}) => {
  * @return {boolean}
  */
 const validate = (attribute, type = {}) => {
-  if (!type.type) { return }
+  if (!type._type) { return }
 
-  if (!comparePropertyToType(attribute, type.type, type.acceptedTypes)) {
-    const message = `Expected "${getTypeName(type.type)}" but got property "${attribute}" of type "${getPropertyTypeName(attribute)}" instead`
+  if (!comparePropertyToType(attribute, type._type, type.acceptedTypes)) {
+    const message = `Expected "${getTypeName(type._type)}" but got property "${attribute}" of type "${getPropertyTypeName(attribute)}" instead`
     if (type.required) {
       throw new TypeError(message)
     } else {
@@ -91,13 +105,15 @@ const _validateAttributes = (modelJson, attributes) => {
 
     // model descriptors
     if (comparePropertyToType(expected, propTypes.object)) {
-      if (!expected.type) {
+      // TODO: need to account for relationship
+      if (!expected._type) {
         throw new TypeError(`Attribute "type" for "${attributeName}" is not specified`)
       }
 
       const jsonAttribute = _defaultAttribute(modelJson[attributeName], expected.default)
-      const parsedJsonAttribute = parseValueToType(jsonAttribute, expected.type)
-      const acceptedTypes = comparePropertyToType(expected.acceptedTypes, propTypes.array) ? { ignore: [expected.type, ...expected.acceptedTypes] } : ACCEPTED_TYPES
+      // TODO: need to account for relationship
+      const parsedJsonAttribute = parseValueToType(jsonAttribute, expected._type)
+      const acceptedTypes = comparePropertyToType(expected.acceptedTypes, propTypes.array) ? { ignore: [expected._type, ...expected.acceptedTypes] } : ACCEPTED_TYPES
 
       if(!validate(parsedJsonAttribute, Object.assign({}, expected, { acceptedTypes }))) {
         validated = false
@@ -115,8 +131,23 @@ const _validateAttributes = (modelJson, attributes) => {
   return validated
 }
 
+const _allowedOptions = function(options, { whitelist, defaultOptions } = {}) {
+  if (!comparePropertyToType(defaultOptions, type.object)) {
+    // silently replace for now
+    defaultOptions = {}
+  }
+
+  return Object.keys(options).reduce((hashType, optionKey) => {
+    if (whitelist.includes(optionKey)) {
+      hashType[optionKey] = options[optionKey]
+    }
+    return hashType
+  }, defaultOptions)
+}
+
 export {
   type,
+  belongsTo,
   validate,
   _defaultAttribute,
   _validateAttributes,
